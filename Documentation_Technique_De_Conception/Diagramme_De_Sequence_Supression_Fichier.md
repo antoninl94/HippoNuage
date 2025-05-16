@@ -83,4 +83,3 @@ Ce diagramme décrit le processus de suppression d’un fichier via **HippoNuage
 
 - **Succès total** : fichier supprimé du stockage **et** des métadonnées.
 - **Échec partiel** : si les métadonnées ne peuvent pas être supprimées après la suppression dans le stockage, l’utilisateur est informé, et le nettoyage est pris en charge automatiquement en interne.
-
