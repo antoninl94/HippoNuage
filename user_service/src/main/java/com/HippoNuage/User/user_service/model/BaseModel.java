@@ -1,47 +1,46 @@
 package com.HippoNuage.User.user_service.model;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
-
 @MappedSuperclass
-public abstract class BaseModel {
-    @Id
-    @GeneratedValue
-    private UUID id;
+public class BaseModel {
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    @Id
+    private UUID uuid;
+
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime created_at;
 
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    private LocalDateTime updated_at;
 
-    //Getters & Setters
-    public UUID getId() {
-        return id;
+
+    @PrePersist
+    public void onCreate() {
+        if (uuid == null) {
+            uuid = UUID.randomUUID();
+        }
+        created_at = LocalDateTime.now();
+        updated_at = LocalDateTime.now();
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    @PreUpdate
+    public void onUpdate() {
+        updated_at = LocalDateTime.now();
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public UUID getUuid() {
+        return uuid;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public LocalDateTime getCreated_at() {
+        return created_at;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public LocalDateTime getUpdated_at() {
+        return updated_at;
     }
 }
