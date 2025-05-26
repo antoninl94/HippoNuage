@@ -8,7 +8,7 @@
 		<version>3.4.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.HippoNuage.User</groupId>
+	<groupId>com.HippoNuage</groupId>
 	<artifactId>user_service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>User Service</name>
@@ -43,6 +43,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+    		<groupId>jakarta.validation</groupId>
+   			 <artifactId>jakarta.validation-api</artifactId>
 		</dependency>
 
 		<dependency>
