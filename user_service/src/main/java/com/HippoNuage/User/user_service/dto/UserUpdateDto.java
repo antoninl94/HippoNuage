@@ -1,7 +1,7 @@
 package com.HippoNuage.User.user_service.dto;
 import jakarta.validation.constraints.*;
 
-public class LoginDto {
+public class UserUpdateDto {
     @NotNull
     @Email
     private String email;
