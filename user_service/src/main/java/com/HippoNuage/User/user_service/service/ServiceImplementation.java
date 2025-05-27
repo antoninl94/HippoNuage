@@ -1,6 +1,8 @@
 package com.HippoNuage.User.user_service.service;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,17 +27,38 @@ public class ServiceImplementation implements UserFacade {
 
     @Override
     public ResponseEntity<?> login(LoginDto loginDto) {
-        String ApiEmail = loginDto.getEmail();
-        userRepository.findByEmail(ApiEmail);
-        return ResponseEntity.ok("Bonjour Chevalier!");
+        if (loginDto.getEmail() == null) {
+            return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body("Email is required.");
+        }
+        if (loginDto.getPassword() == null) {
+            return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body("Password is required.");
+        }
+        Optional<User> userOptional = userRepository.findByEmail(loginDto.getEmail());
+        if (userOptional.isEmpty()) {
+            return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body("Utilisateur non trouvé");
+        }
+        User user = userOptional.get();
+        if (this.passwordEncoder.matches(loginDto.getPassword(), user.getPassword() )){
+            return ResponseEntity.ok("Bonjour Chevalier!");
+        }
+            return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body("Mot de passe, CHEVALIER!");
     }
 
     @Override
     public ResponseEntity<?> register(RegisterDto registerDto) {
         if (registerDto.getEmail() == null) {
-            System.out.println("ca va pas");
+            return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body("Email is required.");
         }
-        
         User user = new User();
         user.setEmail(registerDto.getEmail());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
@@ -44,7 +67,7 @@ public class ServiceImplementation implements UserFacade {
     }
 
     @Override
-    public ResponseEntity<?> update(UserUpdateDto updateDto) {
+    public ResponseEntity<?> update(UserUpdateDto updateDto){
         String ApiEmail = updateDto.getEmail();
         userRepository.findByEmail(ApiEmail);
         return ResponseEntity.ok("bonjour");

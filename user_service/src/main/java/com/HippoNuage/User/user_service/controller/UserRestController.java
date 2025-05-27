@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.HippoNuage.User.user_service.dto.RegisterDto;
+import com.HippoNuage.User.user_service.dto.*;
 import com.HippoNuage.User.user_service.service.UserFacade;
 
 import jakarta.validation.Valid;
@@ -26,5 +26,10 @@ public class UserRestController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterDto registerDto) {
         return this.userFacade.register(registerDto);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
+        return this.userFacade.login(loginDto);
     }
 }
