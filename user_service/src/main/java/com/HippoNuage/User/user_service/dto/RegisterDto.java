@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Size;
 
 public class RegisterDto {
 
+    public RegisterDto() {}
+
     @Email(message = "Email invalide")
     @NotBlank(message = "L'adresse mail est obligatoire")
     private String email;
