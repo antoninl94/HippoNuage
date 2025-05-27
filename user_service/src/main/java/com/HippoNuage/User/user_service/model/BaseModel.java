@@ -9,7 +9,8 @@ import java.util.UUID;
 public class BaseModel {
 
     @Id
-    private UUID uuid;
+    @Column(name= "id")
+    private UUID id;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime created_at;
@@ -20,8 +21,8 @@ public class BaseModel {
 
     @PrePersist
     public void onCreate() {
-        if (uuid == null) {
-            uuid = UUID.randomUUID();
+        if (id == null) {
+            id = UUID.randomUUID();
         }
         created_at = LocalDateTime.now();
         updated_at = LocalDateTime.now();
@@ -32,8 +33,8 @@ public class BaseModel {
         updated_at = LocalDateTime.now();
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public UUID getId() {
+        return id;
     }
 
     public LocalDateTime getCreated_at() {

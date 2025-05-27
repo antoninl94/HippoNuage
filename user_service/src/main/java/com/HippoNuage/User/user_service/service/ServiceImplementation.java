@@ -1,11 +1,15 @@
 package com.HippoNuage.User.user_service.service;
+import org.hibernate.annotations.SourceType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import com.HippoNuage.User.user_service.dto.*;
 import com.HippoNuage.User.user_service.repository.UserRepository;
+import com.HippoNuage.User.user_service.model.User;
 
+@Service
 public class ServiceImplementation implements UserFacade{
 
     private final UserRepository userRepository;
@@ -18,14 +22,19 @@ public class ServiceImplementation implements UserFacade{
        public ResponseEntity<?> login(LoginDto loginDto) {
             String ApiEmail = loginDto.getEmail();
             userRepository.findByEmail(ApiEmail);
-            return ResponseEntity.ok("bonjour");
+            return ResponseEntity.ok("Bonjour Chevalier!");
     }
 
     @Override
         public ResponseEntity<?> register(RegisterDto registerDto) {
-            String ApiEmail = registerDto.getEmail();
-            userRepository.findByEmail(ApiEmail);
-            return ResponseEntity.ok("bonjour");
+            User user = new User();
+            if (registerDto.getEmail() == null){
+                System.out.println("ca va pas");
+            }
+            user.setEmail(registerDto.getEmail());
+            user.setPassword(registerDto.getPassword());
+            this.userRepository.save(user);
+            return ResponseEntity.ok("Chevalier créé ! Pour Hipponuage !");
     }
   
     @Override

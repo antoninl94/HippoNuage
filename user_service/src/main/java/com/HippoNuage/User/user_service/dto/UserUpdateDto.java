@@ -2,27 +2,42 @@ package com.HippoNuage.User.user_service.dto;
 import jakarta.validation.constraints.*;
 
 public class UserUpdateDto {
-    @NotNull
     @Email
     private String email;
 
-    @NotNull
-    @Size(min = 8)
-    private String password;
+    @NotBlank
+    private String currentPassword;
 
-    // getters et setters
+    @NotBlank
+    @Size(min = 8, message = "Le mot de passe doit contenir au moins 8 caractères")
+    @Pattern(
+        regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).{8,}$",
+        message = "Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial"
+    )
+    private String newPassword;
+
+    //Getters et Setters
     public String getEmail() {
-        return email;
-}
+        return this.email;
+    }
 
     public void setEmail(String value) {
         this.email = value;
-}
-    public String getPassword(){
-        return this.password;
     }
 
-    public void setPassword(String value){
-        this.password = value; 
+    public String getCurrentPassword() {
+        return currentPassword;
+    }
+
+    public void setCurrentPassword(String currentPassword) {
+        this.currentPassword = currentPassword;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
     }
 }
