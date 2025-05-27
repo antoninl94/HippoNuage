@@ -1,5 +1,4 @@
 package com.HippoNuage.User.user_service.dto;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -19,20 +18,19 @@ public class LoginDto {
     )
     private String password;
 
-    //getters et setters
+    // getters et setters
     public String getEmail() {
         return email;
-    }
+}
 
     public void setEmail(String value) {
         this.email = value;
-    }
-
-    public String getPassword() {
+}
+    public String getPassword(){
         return this.password;
     }
 
-    public void setPassword(String value) {
-        this.password = value;
+    public void setPassword(String value){
+        this.password = value; 
     }
 }

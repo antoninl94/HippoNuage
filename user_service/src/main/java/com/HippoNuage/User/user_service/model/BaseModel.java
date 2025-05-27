@@ -13,7 +13,7 @@ import jakarta.persistence.PreUpdate;
 public class BaseModel {
 
     @Id
-    @Column(name = "id")
+    @Column(name= "id")
     private UUID id;
 
     @Column(name = "created_at", updatable = false)
@@ -37,7 +37,7 @@ public class BaseModel {
         updated_at = LocalDateTime.now();
     }
 
-    public UUID getUuid() {
+    public UUID getId() {
         return id;
     }
 
