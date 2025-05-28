@@ -1,4 +1,5 @@
 package com.HippoNuage.User.user_service.controller;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -6,7 +7,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.HippoNuage.User.user_service.dto.*;
+import com.HippoNuage.User.user_service.dto.LoginDto;
+import com.HippoNuage.User.user_service.dto.RegisterDto;
+import com.HippoNuage.User.user_service.dto.UserUpdateDto;
 import com.HippoNuage.User.user_service.service.UserFacade;
 
 import jakarta.validation.Valid;
@@ -14,7 +17,6 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/user")
 public class UserRestController {
-    
 
     private final UserFacade userFacade;
 
@@ -31,5 +33,10 @@ public class UserRestController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
         return this.userFacade.login(loginDto);
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<?> login(@RequestBody UserUpdateDto updateDto) {
+        return this.userFacade.update(updateDto);
     }
 }

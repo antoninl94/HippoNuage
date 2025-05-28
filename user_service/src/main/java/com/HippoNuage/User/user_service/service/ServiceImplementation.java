@@ -1,4 +1,5 @@
 package com.HippoNuage.User.user_service.service;
+
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,25 +30,25 @@ public class ServiceImplementation implements UserFacade {
     public ResponseEntity<?> login(LoginDto loginDto) {
         if (loginDto.getEmail() == null) {
             return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body("Email is required.");
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("Email is required.");
         }
         if (loginDto.getPassword() == null) {
             return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body("Password is required.");
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("Password is required.");
         }
         Optional<User> userOptional = userRepository.findByEmail(loginDto.getEmail());
         if (userOptional.isEmpty()) {
             return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body("Utilisateur non trouvé");
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("Utilisateur non trouvé");
         }
         User user = userOptional.get();
-        if (this.passwordEncoder.matches(loginDto.getPassword(), user.getPassword() )){
+        if (this.passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
             return ResponseEntity.ok("Bonjour Chevalier!");
         }
-            return ResponseEntity
+        return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body("Mot de passe, CHEVALIER!");
     }
@@ -56,8 +57,8 @@ public class ServiceImplementation implements UserFacade {
     public ResponseEntity<?> register(RegisterDto registerDto) {
         if (registerDto.getEmail() == null) {
             return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body("Email is required.");
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("Email is required.");
         }
         User user = new User();
         user.setEmail(registerDto.getEmail());
@@ -67,9 +68,14 @@ public class ServiceImplementation implements UserFacade {
     }
 
     @Override
-    public ResponseEntity<?> update(UserUpdateDto updateDto){
-        String ApiEmail = updateDto.getEmail();
-        userRepository.findByEmail(ApiEmail);
+    public ResponseEntity<?> update(UserUpdateDto updateDto) {
+        if ((updateDto.getNewEmail() == null) && (updateDto.getNewPassword() == null)) {
+            return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body("Entrée invalide");
+        };
+
+        userRepository.findByEmail();
         return ResponseEntity.ok("bonjour");
     }
 
