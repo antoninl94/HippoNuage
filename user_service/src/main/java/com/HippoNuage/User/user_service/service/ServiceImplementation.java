@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import com.HippoNuage.User.user_service.dto.LoginDto;
 import com.HippoNuage.User.user_service.dto.RegisterDto;
 import com.HippoNuage.User.user_service.dto.UserUpdateDto;
@@ -68,7 +67,6 @@ public class ServiceImplementation implements UserFacade {
     }
 
     @Override
-<<<<<<< HEAD
     public ResponseEntity<?> update(UserUpdateDto updateDto){
         if ((updateDto.getNewEmail() == null) && (updateDto.getNewPassword() == null)) {
             return ResponseEntity
@@ -77,18 +75,6 @@ public class ServiceImplementation implements UserFacade {
         }
         return ResponseEntity.ok("c'est faux il manque le JWT"); 
      }
-=======
-    public ResponseEntity<?> update(UserUpdateDto updateDto) {
-        if ((updateDto.getNewEmail() == null) && (updateDto.getNewPassword() == null)) {
-            return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .body("Entrée invalide");
-        };
-
-        userRepository.findByEmail();
-        return ResponseEntity.ok("bonjour");
-    }
->>>>>>> main
 
     @Override
     public ResponseEntity<?> disconnect(String token) {
