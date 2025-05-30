@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import com.HippoNuage.User.user_service.model.User;
 import com.HippoNuage.User.user_service.repository.UserRepository;
@@ -64,5 +63,9 @@ public class JWTConfig {
         boolean isUserValid = userId.equals(user.getId().toString());
 
         return isUserValid && !isTokenExpired(token);
+    }
+
+    public boolean isTokenExpired(String token) {
+        return false;
     }
 }
