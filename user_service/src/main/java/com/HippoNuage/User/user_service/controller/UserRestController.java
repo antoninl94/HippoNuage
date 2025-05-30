@@ -30,4 +30,10 @@ public class UserRestController {
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
         return this.userFacade.login(loginDto);
     }
+
+    @PostMapping("/update")
+    public ResponseEntity<?> login(@RequestBody UserUpdateDto updateDto) {
+        return this.userFacade.update(updateDto);
+    }
+
 }

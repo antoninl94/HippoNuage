@@ -1,9 +1,5 @@
 package com.HippoNuage.User.user_service.service;
-import java.beans.BeanProperty;
-
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 
 import com.HippoNuage.User.user_service.dto.LoginDto;
 import com.HippoNuage.User.user_service.dto.RegisterDto;

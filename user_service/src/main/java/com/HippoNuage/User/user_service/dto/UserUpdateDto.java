@@ -3,10 +3,7 @@ import jakarta.validation.constraints.*;
 
 public class UserUpdateDto {
     @Email
-    private String email;
-
-    @NotBlank
-    private String currentPassword;
+    private String NewEmail;
 
     @NotBlank
     @Size(min = 8, message = "Le mot de passe doit contenir au moins 8 caractères")
@@ -17,20 +14,12 @@ public class UserUpdateDto {
     private String newPassword;
 
     //Getters et Setters
-    public String getEmail() {
-        return this.email;
+    public String getNewEmail() {
+        return this.NewEmail;
     }
 
     public void setEmail(String value) {
-        this.email = value;
-    }
-
-    public String getCurrentPassword() {
-        return currentPassword;
-    }
-
-    public void setCurrentPassword(String currentPassword) {
-        this.currentPassword = currentPassword;
+        this.NewEmail = value;
     }
 
     public String getNewPassword() {

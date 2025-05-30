@@ -37,7 +37,7 @@ public class ServiceImplementation implements UserFacade{
                 .status(HttpStatus.BAD_REQUEST)
                 .body("Password is required.");
         }
-        Optional<User> userOptional = userRepository.findByEmail(loginDto.getEmail());
+        Optional<User> userOptional = this.userRepository.findByEmail(loginDto.getEmail());
         if (userOptional.isEmpty()) {
             return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -68,10 +68,13 @@ public class ServiceImplementation implements UserFacade{
   
     @Override
     public ResponseEntity<?> update(UserUpdateDto updateDto){
-        String ApiEmail = updateDto.getEmail();
-        userRepository.findByEmail(ApiEmail);
-        return ResponseEntity.ok("bonjour");
-    }
+        if ((updateDto.getNewEmail() == null) && (updateDto.getNewPassword() == null)) {
+            return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body("Tu dois mettre quelque chose à jour, chevalier");
+        }
+        return ResponseEntity.ok("c'est faux il manque le JWT"); 
+     }
 
     @Override
     public ResponseEntity<?> disconnect(String token) {
