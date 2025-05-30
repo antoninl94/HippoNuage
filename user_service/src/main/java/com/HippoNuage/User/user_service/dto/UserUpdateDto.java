@@ -7,7 +7,6 @@ import jakarta.validation.constraints.Size;
 public class UserUpdateDto {
     @Email
     private String NewEmail;
-    private String email;
 
     @NotBlank
     private String newPassword;
@@ -25,19 +24,16 @@ public class UserUpdateDto {
         return this.NewEmail;
     }
 
-    public void setEmail(String value) {
+    public void setNewEmail(String value) {
         this.NewEmail = value;
     }
 
-    public void setNewEmail(String value) {
-        this.email = value;
+    public void setNewPassword(String value) {
+        this.NewEmail = value;
     }
 
     public String getNewPassword() {
         return newPassword;
     }
 
-    public void setNewPassword(String newPassword) {
-        this.newPassword = newPassword;
-    }
 }

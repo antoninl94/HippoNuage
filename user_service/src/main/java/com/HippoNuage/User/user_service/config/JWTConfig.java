@@ -4,8 +4,8 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import com.HippoNuage.User.user_service.model.User;
 import com.HippoNuage.User.user_service.repository.UserRepository;
@@ -14,20 +14,12 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
-
+@Component
 public class JWTConfig {
 
-    @Value("${Jwt.secret}")
+    @Value("${jwt.secret}")
     private String jwtSecret;
-
-    @Autowired
-    private final UserRepository userRepository;
     private static final long EXPIRATION_TIME = 7200000;
-
-
-    public JWTConfig(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     // Token generation
     public String generateToken(User user) {
@@ -66,6 +58,13 @@ public class JWTConfig {
     }
 
     public boolean isTokenExpired(String token) {
-        return false;
+        Date expirationDate = Jwts.parserBuilder()
+            .setSigningKey(jwtSecret.getBytes())
+            .build()
+            .parseClaimsJws(token)
+            .getBody()
+            .getExpiration();
+
+        return expirationDate.before(new Date());
     }
 }

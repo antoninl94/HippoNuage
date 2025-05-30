@@ -1,12 +1,15 @@
 package com.HippoNuage.User.user_service.service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.HippoNuage.User.user_service.config.JWTConfig;
 import com.HippoNuage.User.user_service.dto.LoginDto;
 import com.HippoNuage.User.user_service.dto.RegisterDto;
 import com.HippoNuage.User.user_service.dto.UserUpdateDto;
@@ -18,11 +21,13 @@ public class ServiceImplementation implements UserFacade {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JWTConfig jwtConfig;
 
     @Autowired  // Dependency Injection -> Here We tell Spring to inject automatically a dependency
-    public ServiceImplementation(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public ServiceImplementation(UserRepository userRepository, PasswordEncoder passwordEncoder, JWTConfig jwtConfig) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtConfig = jwtConfig;
     }
 
     @Override
@@ -45,7 +50,8 @@ public class ServiceImplementation implements UserFacade {
         }
         User user = userOptional.get();
         if (this.passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
-            return ResponseEntity.ok("Bonjour Chevalier!");
+            String token = this.jwtConfig.generateToken(user);
+            return ResponseEntity.ok("Bonjour Chevalier!" + token);
         }
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
@@ -67,14 +73,31 @@ public class ServiceImplementation implements UserFacade {
     }
 
     @Override
-    public ResponseEntity<?> update(UserUpdateDto updateDto){
-        if ((updateDto.getNewEmail() == null) && (updateDto.getNewPassword() == null)) {
+    public ResponseEntity<?> update(UserUpdateDto updateDto, String token) throws Exception{
+        if ((updateDto.getNewEmail() == null) || (updateDto.getNewPassword() == null)) {
             return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body("Tu dois mettre quelque chose à jour, chevalier");
         }
-        return ResponseEntity.ok("c'est faux il manque le JWT"); 
-     }
+        boolean JwtCheck = this.jwtConfig.validateToken(token, this.userRepository);
+        if (!JwtCheck) {
+            return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body("Token non validen, sale gueux");
+        }
+        String userId = this.jwtConfig.extractUserId(token);
+        Optional<User> user = this.userRepository.findById(UUID.fromString(userId));
+        if (user.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("Utilisateur non trouvé");
+        }
+        User finaluser = user.get();
+        finaluser.setEmail(updateDto.getNewEmail());
+        finaluser.setPassword(this.passwordEncoder.encode(updateDto.getNewPassword()));
+        this.userRepository.save(finaluser);
+        return ResponseEntity.ok("Votre profil a été modifié!");
+    }
 
     @Override
     public ResponseEntity<?> disconnect(String token) {
