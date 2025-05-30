@@ -1,9 +1,13 @@
 package com.HippoNuage.User.user_service.model;
 
-import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 
 @MappedSuperclass
 public class BaseModel {
