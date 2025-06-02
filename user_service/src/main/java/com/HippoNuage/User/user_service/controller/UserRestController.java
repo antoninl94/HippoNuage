@@ -40,7 +40,7 @@ public class UserRestController {
 
     @PutMapping("/update")
     public ResponseEntity<?> update(
-        @RequestBody UserUpdateDto updateDto, 
+        @RequestBody @Valid UserUpdateDto updateDto, 
         @RequestHeader("Authorization") String authHeader) throws Exception {
 
         // Vérifie la présence du token
