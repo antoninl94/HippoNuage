@@ -65,12 +65,20 @@ public class ServiceImplementation implements UserFacade {
                     .status(HttpStatus.BAD_REQUEST)
                     .body("Email is required.");
         }
-        User user = new User();
-        user.setEmail(registerDto.getEmail());
-        user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
-        this.userRepository.save(user);
-        return ResponseEntity.ok("Chevalier créé ! Pour Hipponuage !");
-    }
+        if (this.userRepository.findByEmail(registerDto.getEmail()).isEmpty()) {
+            User user = new User();
+            user.setEmail(registerDto.getEmail());
+            user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+            this.userRepository.save(user);
+            return ResponseEntity.ok("Chevalier créé ! Pour Hipponuage !");
+        }
+        else {
+            return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body("Cet email est déjà utilisé !");
+        }
+
+}
 
     @Override
     public ResponseEntity<?> update(UserUpdateDto updateDto, String token) throws Exception{
@@ -93,6 +101,7 @@ public class ServiceImplementation implements UserFacade {
                     .body("Utilisateur non trouvé");
         }
         User finaluser = user.get();
+        //Manque la logique pour vérifier que c'est soit un nouveau mail soit son mail à lui, pas celui d'un autre utilisateur
         finaluser.setEmail(updateDto.getNewEmail());
         finaluser.setPassword(this.passwordEncoder.encode(updateDto.getNewPassword()));
         this.userRepository.save(finaluser);
