@@ -6,10 +6,13 @@ import jakarta.validation.constraints.Size;
 
 public class UserUpdateDto {
     @Email
-    private String newEmail;
-
     @NotBlank
-    private String newPassword;
+    @Size(min = 5, message = "L'email doit contenir au moins 5 caractères")
+    @Pattern(
+        regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$",
+        message = "Format de l'adresse email invalide"
+    )
+    private String newEmail;
 
     @NotBlank
     @Size(min = 8, message = "Le mot de passe doit contenir au moins 8 caractères")
@@ -17,6 +20,7 @@ public class UserUpdateDto {
         regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).{8,}$",
         message = "Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial"
     )
+    private String newPassword;
 
     //Getters et Setters
     public String getNewEmail() {

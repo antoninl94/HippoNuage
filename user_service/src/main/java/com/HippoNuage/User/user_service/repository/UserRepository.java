@@ -10,7 +10,6 @@ import com.HippoNuage.User.user_service.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
-    //Here we already have all CRUD methods ready from JPA repo
     Optional<User> findByEmail(String email);
     
 }
