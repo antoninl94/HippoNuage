@@ -1,9 +1,12 @@
 package com.HippoNuage.User.user_service.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,8 +38,17 @@ public class UserRestController {
         return this.userFacade.login(loginDto);
     }
 
-    @PostMapping("/update")
-    public ResponseEntity<?> login(@RequestBody UserUpdateDto updateDto) {
-        return this.userFacade.update(updateDto);
+    @PutMapping("/update")
+    public ResponseEntity<?> update(
+        @RequestBody UserUpdateDto updateDto, 
+        @RequestHeader("Authorization") String authHeader) throws Exception {
+        
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body("Il manque ton jeton d'authentification, chevalier !");
+        }
+        String token = authHeader.substring((7));
+        return this.userFacade.update(updateDto, token);
     }
 }

@@ -1,6 +1,7 @@
 package com.HippoNuage.User.user_service.service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.HippoNuage.User.user_service.config.JWTConfig;
+import com.HippoNuage.User.user_service.dto.AuthResponseDto;
 import com.HippoNuage.User.user_service.dto.LoginDto;
 import com.HippoNuage.User.user_service.dto.RegisterDto;
 import com.HippoNuage.User.user_service.dto.UserUpdateDto;
@@ -19,11 +22,13 @@ public class ServiceImplementation implements UserFacade {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JWTConfig jwtConfig;
 
     @Autowired  // Dependency Injection -> Here We tell Spring to inject automatically a dependency
-    public ServiceImplementation(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public ServiceImplementation(UserRepository userRepository, PasswordEncoder passwordEncoder, JWTConfig jwtConfig) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtConfig = jwtConfig;
     }
 
     @Override
@@ -38,7 +43,7 @@ public class ServiceImplementation implements UserFacade {
                     .status(HttpStatus.BAD_REQUEST)
                     .body("Password is required.");
         }
-        Optional<User> userOptional = userRepository.findByEmail(loginDto.getEmail());
+        Optional<User> userOptional = this.userRepository.findByEmail(loginDto.getEmail());
         if (userOptional.isEmpty()) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
@@ -46,7 +51,9 @@ public class ServiceImplementation implements UserFacade {
         }
         User user = userOptional.get();
         if (this.passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
-            return ResponseEntity.ok("Bonjour Chevalier!");
+            String token = this.jwtConfig.generateToken(user);
+            AuthResponseDto response = new AuthResponseDto("Bonjour Sire!", token);
+            return ResponseEntity.ok(response);
         }
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
@@ -60,23 +67,51 @@ public class ServiceImplementation implements UserFacade {
                     .status(HttpStatus.BAD_REQUEST)
                     .body("Email is required.");
         }
-        User user = new User();
-        user.setEmail(registerDto.getEmail());
-        user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
-        this.userRepository.save(user);
-        return ResponseEntity.ok("Chevalier créé ! Pour Hipponuage !");
+        if (this.userRepository.findByEmail(registerDto.getEmail()).isEmpty()) {
+            User user = new User();
+            user.setEmail(registerDto.getEmail());
+            user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+            this.userRepository.save(user);
+            String token = this.jwtConfig.generateToken(user);
+            AuthResponseDto response = new AuthResponseDto("Chevalier adoubé! Pour Hipponuage !", token);
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body("Chevalier déja existant !");
+        }
     }
 
     @Override
-    public ResponseEntity<?> update(UserUpdateDto updateDto) {
-        if ((updateDto.getNewEmail() == null) && (updateDto.getNewPassword() == null)) {
+    public ResponseEntity<?> update(UserUpdateDto updateDto, String token) throws Exception{
+        if ((updateDto.getNewEmail() == null) || (updateDto.getNewPassword() == null)) {
             return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .body("Entrée invalide");
-        };
-
-        userRepository.findByEmail();
-        return ResponseEntity.ok("bonjour");
+                .status(HttpStatus.BAD_REQUEST)
+                .body("Tu dois mettre quelque chose à jour, chevalier");
+        }
+        boolean JwtCheck = this.jwtConfig.validateToken(token, this.userRepository);
+        if (!JwtCheck) {
+            return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body("Token non validen, sale gueux");
+        }
+        String userId = this.jwtConfig.extractUserId(token);
+        if (userId == null) {
+            return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body("Token Invalide");
+        }
+        Optional<User> user = this.userRepository.findById(UUID.fromString(userId));
+        if (user.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("Utilisateur non trouvé");
+        }
+        User finaluser = user.get();
+        finaluser.setEmail(updateDto.getNewEmail());
+        finaluser.setPassword(this.passwordEncoder.encode(updateDto.getNewPassword()));
+        this.userRepository.save(finaluser);
+        return ResponseEntity.ok("Votre profil a été modifié!");
     }
 
     @Override

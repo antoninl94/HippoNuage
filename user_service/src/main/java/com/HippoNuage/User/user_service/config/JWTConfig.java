@@ -4,31 +4,29 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import com.HippoNuage.User.user_service.model.User;
 import com.HippoNuage.User.user_service.repository.UserRepository;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 
-
+@Component
 public class JWTConfig {
 
-    @Value("${Jwt.secret}")
+    @Value("${jwt.secret}")
     private String jwtSecret;
-
-    @Autowired
-    private final UserRepository userRepository;
     private static final long EXPIRATION_TIME = 7200000;
-
-
-    public JWTConfig(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private static final Logger logger = LoggerFactory.getLogger(JWTConfig.class);
 
     // Token generation
     public String generateToken(User user) {
@@ -43,12 +41,17 @@ public class JWTConfig {
 
     // Extracting the user ID from the token
     public String extractUserId(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(jwtSecret.getBytes())
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+        try {
+            return Jwts.parserBuilder()
+            .setSigningKey(jwtSecret.getBytes())
+            .build()
+            .parseClaimsJws(token)
+            .getBody()
+            .getSubject();
+        } catch (ExpiredJwtException | MalformedJwtException | UnsupportedJwtException | SignatureException | IllegalArgumentException e) {
+            logger.warn("Invalid JWT: {}", e.getMessage());
+            return null;
+        }
     }
 
 
@@ -64,5 +67,16 @@ public class JWTConfig {
         boolean isUserValid = userId.equals(user.getId().toString());
 
         return isUserValid && !isTokenExpired(token);
+    }
+
+    public boolean isTokenExpired(String token) {
+        Date expirationDate = Jwts.parserBuilder()
+            .setSigningKey(jwtSecret.getBytes())
+            .build()
+            .parseClaimsJws(token)
+            .getBody()
+            .getExpiration();
+
+        return expirationDate.before(new Date());
     }
 }
