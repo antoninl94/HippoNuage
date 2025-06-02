@@ -28,7 +28,7 @@ public class JWTConfig {
     private static final long EXPIRATION_TIME = 7200000;
     private static final Logger logger = LoggerFactory.getLogger(JWTConfig.class);
 
-    // Token generation
+    // Génère un nouveau token
     public String generateToken(User user) {
         return Jwts.builder()
                 .setSubject(user.getId().toString())
@@ -39,7 +39,7 @@ public class JWTConfig {
                 .compact();
     }
 
-    // Extracting the user ID from the token
+    // Extrait l'ID utilisateur du token
     public String extractUserId(String token) {
         try {
             return Jwts.parserBuilder()
@@ -54,7 +54,7 @@ public class JWTConfig {
         }
     }
 
-
+    // Méthode pour vérifier la validité d'un token via la date et l'ID utilisateur
     public boolean validateToken(String token, UserRepository userRepository) {
         String userId = extractUserId(token);
 
@@ -69,6 +69,7 @@ public class JWTConfig {
         return isUserValid && !isTokenExpired(token);
     }
 
+    // Méthode pour vérifier la date d'expiration du token
     public boolean isTokenExpired(String token) {
         Date expirationDate = Jwts.parserBuilder()
             .setSigningKey(jwtSecret.getBytes())

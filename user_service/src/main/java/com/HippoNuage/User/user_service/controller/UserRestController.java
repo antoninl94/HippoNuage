@@ -42,7 +42,8 @@ public class UserRestController {
     public ResponseEntity<?> update(
         @RequestBody UserUpdateDto updateDto, 
         @RequestHeader("Authorization") String authHeader) throws Exception {
-        
+
+        // Vérifie la présence du token
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
