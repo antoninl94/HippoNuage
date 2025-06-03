@@ -18,16 +18,16 @@ public class Tokens {
     private UUID id;
 
     @Column(name = "token_hash", nullable = false, unique = true, length = 256)
-    private String token_hash;
+    private String tokenHash;
 
     @Column(name = "created_at", updatable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @Column(name = "expires_at", updatable = false)
-    private LocalDateTime expires_at;
+    private LocalDateTime expiresAt;
 
     @Column(name = "is_blacklisted",  nullable = false)
-    private boolean is_blacklisted = false;
+    private boolean isBlacklisted = false;
 
     public Tokens() {}
     
@@ -36,8 +36,8 @@ public class Tokens {
         if (id == null) {
             id = UUID.randomUUID();
         }
-        created_at = LocalDateTime.now();
-        expires_at = created_at.plusHours(2);
+        createdAt = LocalDateTime.now();
+        expiresAt = createdAt.plusHours(2);
     }
 
     //Getters & Setters
@@ -45,27 +45,27 @@ public class Tokens {
         return id;
     }
 
-    public String getToken_hash() {
-        return token_hash;
+    public String getTokenHash() {
+        return tokenHash;
     }
 
-    public void setToken_hash(String token_hash) {
-        this.token_hash = token_hash;
+    public void setTokenHash(String token_hash) {
+        this.tokenHash = token_hash;
     }
 
-    public LocalDateTime getCreated_at() {
-        return created_at;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public LocalDateTime getExpires_at() {
-        return expires_at;
+    public LocalDateTime getExpiresAt() {
+        return expiresAt;
     }
 
-    public boolean Is_blacklisted() {
-        return is_blacklisted;
+    public boolean IsBlacklisted() {
+        return isBlacklisted;
     }
 
-    public void setIs_blacklisted(boolean is_blacklisted) {
-        this.is_blacklisted = is_blacklisted;
+    public void setIsBlacklisted(boolean is_blacklisted) {
+        this.isBlacklisted = is_blacklisted;
     }
 }
