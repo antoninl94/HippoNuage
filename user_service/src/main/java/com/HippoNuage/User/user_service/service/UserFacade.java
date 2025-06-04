@@ -10,4 +10,6 @@ public interface UserFacade {
   public ResponseEntity<?> register(RegisterDto registerDto);
   public ResponseEntity<?> update(UserUpdateDto updateDto, String token) throws Exception;
   public ResponseEntity<?> disconnect(String token);
+  public ResponseEntity<?> verifyEmail(String token);
+  public ResponseEntity<?> resendEmail(String token);
 }

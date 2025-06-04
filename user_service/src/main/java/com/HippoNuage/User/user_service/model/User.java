@@ -14,6 +14,9 @@ public class User extends BaseModel{
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "validated_email", nullable = false)
+    private boolean validatedEmail = false;
+
     //Getters & Setters
     public String getEmail() {
         return this.email;
@@ -29,5 +32,13 @@ public class User extends BaseModel{
 
     public void setPassword(String value) {
         this.password = value;
+    }
+
+    public boolean getValidatedEmail() {
+        return this.validatedEmail;
+    }
+    
+    public void setValidatedEmail(boolean isValid){
+        this.validatedEmail = isValid;
     }
 }

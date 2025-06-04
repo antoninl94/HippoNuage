@@ -29,13 +29,14 @@ public class JWTConfig {
 
     @Value("${jwt.secret}")
     private String jwtSecret;
-    private static final long EXPIRATION_TIME = 7200000;
+    private static final long EXPIRATION_TIME = 1800000;
     private static final Logger logger = LoggerFactory.getLogger(JWTConfig.class);
     
-    @Autowired
+    
     private final TokenRepository tokenRepository;
     private final TokenImplementation tokenImplementation;
-
+    
+    @Autowired
     private JWTConfig(TokenRepository tokenRepository, TokenImplementation tokenImplementation) {
         this.tokenRepository = tokenRepository;
         this.tokenImplementation = tokenImplementation;
@@ -74,7 +75,11 @@ public class JWTConfig {
 
     // Méthode pour vérifier la validité d'un token via la date et l'ID utilisateur
     public boolean validateToken(String token, UserRepository userRepository) {
+        if (!this.tokenImplementation.IsAllowedToken((token))) {
+            return false;
+        }
         String userId = extractUserId(token);
+        if (userId == null) return false;
 
         Optional<User> userOpt = userRepository.findById(UUID.fromString(userId));
         if (userOpt.isEmpty()) {
