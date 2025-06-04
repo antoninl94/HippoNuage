@@ -37,7 +37,7 @@ public class JWTConfig {
     private final TokenImplementation tokenImplementation;
     
     @Autowired
-    private JWTConfig(TokenRepository tokenRepository, TokenImplementation tokenImplementation) {
+    public JWTConfig(TokenRepository tokenRepository, TokenImplementation tokenImplementation) {
         this.tokenRepository = tokenRepository;
         this.tokenImplementation = tokenImplementation;
     }

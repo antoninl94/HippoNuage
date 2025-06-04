@@ -32,10 +32,7 @@ public class TokenImplementation{
             return false;
         }
         Tokens TokenResponse = opttoken.get();
-        if (TokenResponse.IsBlacklisted()) {
-            return false;
-        }
-        return true;
+        return !TokenResponse.getIsBlacklisted();
     }
 
     public void blacklistToken(Tokens token) {
