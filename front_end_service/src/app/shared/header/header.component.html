@@ -1,0 +1,25 @@
+<!-- BOUTON BURGER & MENU -->
+<input id="menu-toggle" type="checkbox" class="hidden peer" />
+
+<header class="bg-white backdrop-blur-sm flex justify-between items-center text-black w-full h-16 px-4 relative z-50">
+  <!-- Logo & titre -->
+   <div class="flex items-center">
+    <img src="assets/logoV2.png" alt="Logo de l'HippoNuage" class="h-10">
+    <h1 class="text-xl font-bold">HippoNuage</h1>
+   </div>
+  <!-- Burger -->
+  <label for="menu-toggle" class="cursor-pointer z-50">
+    <div class="w-6 h-0.5 bg-black my-1 transition-all peer-checked:rotate-45 peer-checked:translate-y-2"></div>
+    <div class="w-6 h-0.5 bg-black my-1 transition-all peer-checked:opacity-0"></div>
+    <div class="w-6 h-0.5 bg-black my-1 transition-all peer-checked:-rotate-45 peer-checked:-translate-y-2"></div>
+  </label>
+</header>
+
+<!-- MENU DÉROULANT -->
+<nav class="peer-checked:translate-y-0 translate-y-[-200px] transition-transform duration-300 bg-white shadow-md absolute top-16 left-0 w-full z-40">
+  <ul class="text-center divide-y divide-gray-300">
+    <li><a href="#" class="block py-4 text-black hover:bg-gray-100">Se connecter</a></li>
+    <li><a href="#" class="block py-4 text-black hover:bg-gray-100">S'inscrire</a></li>
+    <li><a href="#" class="block py-4 text-black hover:bg-gray-100">Contact</a></li>
+  </ul>
+</nav>
