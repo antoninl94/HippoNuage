@@ -16,10 +16,10 @@ public class BaseModel {
     private UUID uuid;
 
     @Column(name = "created_at", updatable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    private LocalDateTime updated_at;
+    private LocalDateTime updatedAt;
 
 
     @PrePersist
@@ -27,13 +27,13 @@ public class BaseModel {
         if (uuid == null) {
             uuid = UUID.randomUUID();
         }
-        created_at = LocalDateTime.now();
-        updated_at = LocalDateTime.now();
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
     public void onUpdate() {
-        updated_at = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 
     public UUID getUuid() {
@@ -41,10 +41,10 @@ public class BaseModel {
     }
 
     public LocalDateTime getCreated_at() {
-        return created_at;
+        return createdAt;
     }
 
     public LocalDateTime getUpdated_at() {
-        return updated_at;
+        return updatedAt;
     }
 }

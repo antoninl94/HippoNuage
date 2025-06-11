@@ -92,7 +92,9 @@ public class ServiceImplementation implements UserFacade {
             String token = this.jwtConfig.generateToken(user);
             this.emailValidationService.SendValidationEmail(user);
             AuthResponseDto response = new AuthResponseDto("Chevalier adoubé! Pour Hipponuage ! Valide ton email pour accéder aux fonctionnalités !", token);
-            return ResponseEntity.ok(response);
+            return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
         } else {
             return ResponseEntity
                 .status(HttpStatus.CONFLICT)
