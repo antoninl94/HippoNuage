@@ -13,7 +13,7 @@ import jakarta.persistence.PreUpdate;
 public class BaseModel {
 
     @Id
-    private UUID uuid;
+    private UUID id;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -24,8 +24,8 @@ public class BaseModel {
 
     @PrePersist
     public void onCreate() {
-        if (uuid == null) {
-            uuid = UUID.randomUUID();
+        if (id == null) {
+            id = UUID.randomUUID();
         }
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
@@ -37,7 +37,7 @@ public class BaseModel {
     }
 
     public UUID getUuid() {
-        return uuid;
+        return id;
     }
 
     public LocalDateTime getCreated_at() {

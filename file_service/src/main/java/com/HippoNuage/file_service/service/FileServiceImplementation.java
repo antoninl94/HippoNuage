@@ -14,16 +14,17 @@ import com.HippoNuage.file_service.model.File;
 import com.HippoNuage.file_service.repository.FileRepository;
 
 @Service
-public class FileService {
+public class FileServiceImplementation implements FileFacade {
 
     private final FileRepository fileRepository;
 
     private final Path rootLocation = Paths.get("upload");
 
-    public FileService(FileRepository fileRepository) {
+    public FileServiceImplementation(FileRepository fileRepository) {
         this.fileRepository = fileRepository;
     }
 
+    @Override
     public File uploadFile(UploadDto uploadDto, UUID userId) throws IOException {
         MultipartFile multipartFile = uploadDto.getFile();
 
