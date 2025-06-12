@@ -15,7 +15,10 @@
         </div>
         <div>          
           <input class="w-full bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 mb-6 rounded" type="submit">
-        </div>       
+        </div>
+        <div *ngIf="errorMessage" class="bg-red-100 text-red-700 px-4 py-2 rounded mb-4">
+        {{ errorMessage }}
+        </div>   
       </form>  
       <footer>
         <a class="text-white hover:text-blue-400 text-sm float-right" href="/inscription">Create Account</a>

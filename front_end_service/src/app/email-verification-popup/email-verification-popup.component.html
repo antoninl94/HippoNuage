@@ -1,0 +1,18 @@
+<div class="max-w-lg mx-auto border max-w-sm mt-20 rounded">
+    <form class="shadow-md px-4 py-6 bg-white">
+        <div class="flex justify-center gap-2 mb-6 text-center">
+            <p class="font-bold text-black">Vous avez reçu un email de validation. Merci de bien vouloir cliquer sur le lien pour confirmer votre connexion et accéder aux opérations disponibles</p>
+       </div>
+        <div class="flex items-center justify-center">
+            <button class="bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" (click)="onResend()">
+                Renvoyer une confirmation
+            </button>
+            <button
+                class="bg-gray-400 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="button"
+                (click)="close()">
+                Fermer
+            </button>
+        </div>
+    </form>
+</div>
