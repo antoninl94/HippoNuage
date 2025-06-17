@@ -12,6 +12,13 @@ public class UploadDto {
   @NotNull
   private MultipartFile file;
 
+  public UploadDto(String name, MultipartFile file) {
+    this.name = name;
+    this.file= file;
+  }
+
+  public UploadDto() {}
+
   // getters et setters
   public String getName() {
     return name;
