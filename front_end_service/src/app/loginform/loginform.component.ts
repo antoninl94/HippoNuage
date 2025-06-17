@@ -3,13 +3,14 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-loginform',
   standalone: true,
-  imports: [FormsModule, HttpClientModule, CommonModule],  // <-- ajoute HttpClientModule ici
+  imports: [FormsModule, HttpClientModule, CommonModule],
   templateUrl: './loginform.component.html',
-  styleUrls: ['./loginform.component.css']  // attention à 'styleUrls' (au pluriel)
+  styleUrls: ['./loginform.component.css'] 
 })
 export class LoginformComponent {
   email: string = '';
@@ -18,7 +19,7 @@ export class LoginformComponent {
 
   private apiUrl = 'http://localhost:8080/user/login';
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router, private authService: AuthService) {}
 
   onSubmit() {
     console.log('Formulaire soumis avec:', this.email, this.password);
@@ -26,7 +27,7 @@ export class LoginformComponent {
       .subscribe({
         next: (response) => {
           console.log('Login réussi', response);
-          localStorage.setItem('jwtToken', response.token);
+          this.authService.login(response.token);
           this.router.navigate(['/home']);
         },
         error: (error) => {
