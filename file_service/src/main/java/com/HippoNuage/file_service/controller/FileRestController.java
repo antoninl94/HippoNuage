@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
@@ -34,7 +35,7 @@ public class FileRestController {
         this.jwtService = jwtService;
     }
 
-    @PostMapping("/upload")
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public List<File> multiUpload(@RequestParam("file") List<MultipartFile> files, @AuthenticationPrincipal Jwt jwt) throws IOException {
         UUID userId = jwtService.extractUserId(jwt);
         List<File> uploadedFiles = new ArrayList<>();

@@ -21,14 +21,11 @@ public class FileServiceImplementation implements FileFacade {
 
     private final ValidateFileService validateFileService;
 
-    private final FileCompressService fileCompressService;
-
     private final Path rootLocation = Paths.get("upload");
 
-    public FileServiceImplementation(FileRepository fileRepository, ValidateFileService validateFileService, FileCompressService fileCompressService) {
+    public FileServiceImplementation(FileRepository fileRepository, ValidateFileService validateFileService) {
         this.fileRepository = fileRepository;
         this.validateFileService = validateFileService;
-        this.fileCompressService = fileCompressService;
     }
 
     @Override
@@ -68,7 +65,11 @@ public class FileServiceImplementation implements FileFacade {
         try {
             // Vérifie le type de fichier si c'est un jpg/jpeg alors le fichier est compressé
             if (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg")) {
-                fileCompressService.compressImage(multipartFile, destinationFile);
+                FileCompressService.compressImage(multipartFile, destinationFile);
+            } else if (extension.equalsIgnoreCase("pdf")) {
+                FileCompressService.compressPDF(multipartFile, destinationFile, 0.3f);
+            } else if (extension.equalsIgnoreCase("mp3")) {
+                FileCompressService.compressMp3(multipartFile, destinationFile, 64000);
             } else {
                 multipartFile.transferTo(destinationFile);
             }
@@ -78,7 +79,7 @@ public class FileServiceImplementation implements FileFacade {
             File fileEntity = new File();
             fileEntity.setName(destinationFile.getFileName().toString());
             fileEntity.setPath(destinationFile.toString());
-            fileEntity.setSize(Long.valueOf(Files.size(destinationFile)));
+            fileEntity.setSize(Files.size(destinationFile));
             fileEntity.setFormat(multipartFile.getContentType());
             fileEntity.setUserId(userId);
 
