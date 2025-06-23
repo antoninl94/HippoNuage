@@ -59,7 +59,7 @@ public class ServiceImplementation implements UserFacade {
         if (userOptional.isEmpty()) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body("Utilisateur non trouvé");
+                    .body("Email déjà existant!");
         }
         // Si le mail et le password correspondent -> Utilisateur connecté
         User user = userOptional.get();
@@ -206,8 +206,7 @@ public class ServiceImplementation implements UserFacade {
         if (!finaluser.getValidatedEmail()){
             this.emailValidationService.SendValidationEmail(finaluser);
             return ResponseEntity
-                .status(HttpStatus.ACCEPTED)
-                .body("Un email t'a été adressé, encore une fois ! Ne te fourvoie plus !");
+                .ok("Un email t'a été adressé, encore une fois ! Ne te fourvoie plus !");
         }
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)

@@ -1,0 +1,85 @@
+<div class="hero-bg flex flex-col justify-center items-center overflow-hidden px-4 py-12">
+  <!-- Logo & titre -->
+  <div class="flex flex-col items-center text-center mb-12">
+    <img src="/assets/logoV2.png" alt="HerosectionImg" class="backdrop-blur-sm mb-4 h-40">
+    <h1 class="text-4xl  font-bold mb-2 text-shadow-md">
+      Bienvenue chez HippoNuage !
+    </h1>
+    <p class="font-bold"> Le cloud des vrais chevaliers ⚔️</p>
+  </div>
+
+  <!-- Boutons -->
+  <div class="flex flex-col items-center gap-4 md:flex-row md:justify-center mb-16">
+    <a
+      class="min-w-[200px] px-6 py-4 text-center rounded-md shadow-xl bg-white transition-all"
+      [routerLink]="['/connexion']"
+    >
+      Se connecter
+    </a>
+    <a
+      class="min-w-[200px] px-6 py-4  text-center rounded-md shadow-xl bg-white transition-all"
+      [routerLink]="['/inscription']"
+    >
+      S'inscrire
+    </a>
+  </div>
+
+  <!-- Section "C'est quoi ?" -->
+  <div class="max-w-5xl w-full flex flex-col items-center px-4 pb-12 bg-black/50 rounded-lg pt-12 shadow-md mb-12 px-8 justify-evenly">
+    <h2 class="text-3xl font-bold text-center mb-6 text-white">
+      Utiliser l'HippoNuage
+    </h2>
+    <div class="flex gap-8 w-full flex-col md:flex-row ">
+      <div class=" flex-1 bg-white/80 p-6 rounded-lg shadow-md text-center">
+        <h3 class="font-bold mb-4">Dépose ton fardeau (upload de fichiers)</h3>
+        <p class="">
+          Tels de valeureux écuyers, déposez vos fichiers dans la forteresse du Nuage. En un simple transfert, vos parchemins numériques sont téléportés, stockés et protégés dans les plus hautes tours du château. Aucun dragon (ni hacker) n’y accédera.
+        </p>
+      </div>
+      <div class="flex-1 bg-white/80 p-6 rounded-lg shadow-md text-center">
+        <h3 class="font-bold mb-4">Accès réservé aux chevaliers vérifiés</h3>
+        <p class="">
+          Seuls les nobles porteurs d’un compte certifié — après serment par courriel — peuvent franchir les portes du royaume. Votre coffre numérique est scellé, et seul votre mot de passe magique en détient la clé.</p>
+      </div>
+      <div class="flex-1 bg-white/80 p-6 rounded-lg shadow-md text-center">
+        <h3 class="font-bold mb-4">Gestion royale de vos artefacts</h3>
+        <p class="">
+         Grâce à notre grimoire moderne, naviguez parmi vos trésors : renommez, classez, invoquez ou bannissez vos fichiers à volonté. Le HippoNuage vous offre une main de fer dans un gant de velours... version fullstack.
+        </p>
+      </div>
+    </div>
+  </div>
+  <!-- Section Conception-->
+   <div class="max-w-5xl w-full flex flex-col items-center px-4 bg-black/50 rounded-lg mt-12 pt-12 pb-12 px-8">
+    <h2 class="text-3xl font-bold text-center mb-12 text-white">
+      Conception du Royaume
+    </h2>
+    <div class="flex gap-8 w-full flex-col md:flex-row ">
+      <div class=" flex-1 bg-white/80 p-6 rounded-lg shadow-md text-center">
+        <h3 class="font-bold mb-4">Une Architecture en microservices, digne des royaumes modernes</h3>
+        <p class="">Chaque fonctionnalité d’HippoNuage est un bastion autonome : La gestion des fichiers, l’authentification… tous séparés dans des tours distinctes, veillant chacun à son devoir (SRP – Single Responsibility Principle).
+Grâce à la magie de la dockerisation, chaque microservice voyage dans sa propre embarcation, prêt à être déployé ou mis à jour sans troubler la paix du royaume.
+Cette séparation des pouvoirs reflète les pratiques des guildes de développeurs les plus aguerries — robustesse, scalabilité et honneur en toutes circonstances.
+        </p>
+      </div>
+      <div class="flex-1 bg-white/80 p-6 rounded-lg shadow-md text-center">
+        <h3 class="font-bold mb-4">Une stack de champions, forgée dans les flammes du Web moderne</h3>
+        <p class="">Le backend s’érige fièrement en Java Spring Boot, tel un bouclier solide, typé et structuré. Il répond à l’appel avec puissance, tout en gardant une logique claire et extensible.
+En face, la Single Page Application en Angular brandit son épée TypeScript avec précision, fluidité et élégance.
+Pour garder les artefacts : PostgreSQL comme donjon central, et S3 comme coffre-fort externe, sécurisé et infini.
+Le tout conteneurisé pour un déploiement rapide et reproductible. Un stack taillé pour les quêtes modernes.
+         </p>
+      </div>
+      <div class="flex-1 bg-white/80 p-6 rounded-lg shadow-md text-center">
+        <h3 class="font-bold mb-4">Deux mois et demi de quête agile</h3>
+        <p class="">En 2 mois et demi, deux valeureux développeurs ont conçu ce château numérique à l’aide de la méthode Agile Scrum :
+– des sprints hebdomadaires,
+– des revues régulières,
+– une organisation rigoureuse, mais flexible comme l’épée d’un bretteur.
+La quête a été jalonnée d’itérations, de batailles (avec les bugs), et de conseils d’anciens sages (mentors).
+Une aventure à taille humaine, mais à l’architecture d’empire.
+         </p>
+      </div>
+    </div>
+  </div>
+</div>

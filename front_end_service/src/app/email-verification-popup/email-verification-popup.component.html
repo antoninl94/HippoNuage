@@ -1,0 +1,23 @@
+<div class="max-w-lg mx-auto max-w-sm mt-20 rounded">
+    <form *ngIf="!emailSent" class="shadow-lg px-4 py-6 bg-white rounded-lg">
+        <div class="flex justify-center gap-2 mb-6 text-center">
+            <p class="font-bold text-black">Si votre email n'a pas été validé, vous n'aurez pas accès aux fonctionnalités de l'HippoNuage.
+                <br> Pensez à le faire vérifier!
+            </p>
+       </div>
+        <div class="flex items-center justify-center gap-4">
+            <button class="bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline shadow-lg" type="button" (click)="onResend()">
+                Renvoyer une confirmation
+            </button>
+            <button
+                class="bg-gray-400 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline shadow-lg"
+                type="button"
+                (click)="close()">
+                Fermer
+            </button>
+        </div>
+    </form>
+    <div *ngIf="emailSent" class="shadow-lg px-4 py-6 bg-white rounded-lg text-center text-green-700 font-bold">
+     Email de confirmation renvoyé !
+  </div>
+</div>

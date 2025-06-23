@@ -20,11 +20,9 @@
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
+           "assets": [
+                "src/favicon.ico",
+                "src/assets"
             ],
             "styles": [
               "src/styles.css"
@@ -66,7 +64,7 @@
             }
           },
           "defaultConfiguration": "development"
-        },
+          },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n"
         },

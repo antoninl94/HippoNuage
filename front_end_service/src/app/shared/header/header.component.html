@@ -1,0 +1,46 @@
+<header class="bg-white backdrop-blur-sm flex justify-between items-center text-black w-full h-16 px-4 relative z-50">
+  <!-- Logo -->
+  <div class="flex items-center">
+    <img src="assets/logoV2.png" alt="Logo" class="h-10">
+    <h1 class="text-xl font-bold ml-2">HippoNuage</h1>
+  </div>
+
+  <!-- Burger icon -->
+  <div (click)="toggleMenu()" class="z-50 flex flex-col cursor-pointer transition-all">
+    <div [ngClass]="{
+      'rotate-45 translate-y-2': isMenuOpen,
+      '': !isMenuOpen
+    }" class="w-6 h-0.5 bg-black my-1 transition-all origin-center"></div>
+
+    <div [ngClass]="{
+      'opacity-0': isMenuOpen,
+      '': !isMenuOpen
+    }" class="w-6 h-0.5 bg-black my-1 transition-all"></div>
+
+    <div [ngClass]="{
+      '-rotate-45 -translate-y-2': isMenuOpen,
+      '': !isMenuOpen
+    }" class="w-6 h-0.5 bg-black my-1 transition-all origin-center"></div>
+  </div>
+</header>
+
+<!-- MENU DÉROULANT -->
+<nav *ngIf="isMenuOpen" class="transition-all duration-300 bg-white shadow-md absolute top-16 left-0 w-full z-40">
+  <ul class="text-center divide-y divide-gray-300">
+
+    <!-- Si l'utilisateur n'est PAS connecté -->
+    <ng-container *ngIf="!isLoggedIn; else loggedInMenu">
+      <li><a href="/connexion" (click)="isMenuOpen = false" class="block py-4 text-black hover:bg-gray-100">Se connecter</a></li>
+      <li><a href="/inscription" (click)="isMenuOpen = false" class="block py-4 text-black hover:bg-gray-100">S'inscrire</a></li>
+      <li><a href="/mentions-legales" (click)="isMenuOpen = false" class="block py-4 text-black hover:bg-gray-100">Mentions Légales</a></li>
+    </ng-container>
+
+    <!-- Si l'utilisateur EST connecté -->
+    <ng-template #loggedInMenu>
+      <li><a href="/home" (click)="isMenuOpen = false" class="block py-4 text-black hover:bg-gray-100">Accueil</a></li>
+      <li><a (click)="logout()" class="block py-4 text-black hover:bg-gray-100">Se déconnecter</a></li>
+      <li><a href="/mentions-legales" (click)="isMenuOpen = false" class="block py-4 text-black hover:bg-gray-100">Mentions Légales</a></li>
+    </ng-template>
+
+  </ul>
+</nav>
