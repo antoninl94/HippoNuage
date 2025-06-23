@@ -11,10 +11,11 @@ import { EmailVerificationPopupComponent } from '../email-verification-popup/ema
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
+
 export class HomeComponent {
   showEmailPopup = false;
   errorMessage: string | null = null;
-  openSidebar = true;
+  openSidebar = window.innerWidth >= 768;
   activeSection = 'dashboard';
   windowWidth: number = window.innerWidth;
   showPassword: boolean = false;
@@ -36,8 +37,8 @@ export class HomeComponent {
   setSection(section: string, event: Event) {
     this.activeSection = section;
     event.preventDefault();
-    if (this.openSidebar) {
-    this.openSidebar = false;
+    if (innerWidth < 768) {
+      this.openSidebar = false;
     }
   }
 
