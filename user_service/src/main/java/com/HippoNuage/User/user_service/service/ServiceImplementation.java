@@ -102,7 +102,9 @@ public class ServiceImplementation implements UserFacade {
                     .body("Impossible de renvoyer un email à " + user.getEmail());
             }
             AuthResponseDto response = new AuthResponseDto("Chevalier adoubé! Pour Hipponuage ! Valide ton email pour accéder aux fonctionnalités !", token);
-            return ResponseEntity.ok(response);
+            return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
         } else {
             return ResponseEntity
                 .status(HttpStatus.CONFLICT)

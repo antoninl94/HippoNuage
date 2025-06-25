@@ -61,7 +61,7 @@ public class Tokens {
         return expiresAt;
     }
 
-    public boolean IsBlacklisted() {
+    public boolean getIsBlacklisted() {
         return isBlacklisted;
     }
 

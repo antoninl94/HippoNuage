@@ -37,7 +37,7 @@ public class JWTConfig {
     private final TokenImplementation tokenImplementation;
     
     @Autowired
-    private JWTConfig(TokenRepository tokenRepository, TokenImplementation tokenImplementation) {
+    public JWTConfig(TokenRepository tokenRepository, TokenImplementation tokenImplementation) {
         this.tokenRepository = tokenRepository;
         this.tokenImplementation = tokenImplementation;
     }
@@ -90,18 +90,26 @@ public class JWTConfig {
         User user = userOpt.get();
         boolean isUserValid = userId.equals(user.getId().toString());
 
-        return isUserValid && !isTokenExpired(token);
+        try {
+            return isUserValid && !isTokenExpired(token);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     // Méthode pour vérifier la date d'expiration du token
-    public boolean isTokenExpired(String token) {
-        Date expirationDate = Jwts.parserBuilder()
+    public boolean isTokenExpired(String token) throws Exception {
+        try {
+            Date expirationDate = Jwts.parserBuilder()
             .setSigningKey(jwtSecret.getBytes())
             .build()
             .parseClaimsJws(token)
             .getBody()
             .getExpiration();
-
-        return expirationDate.before(new Date());
+            
+            return expirationDate.before(new Date());
+        } catch (Exception e) {
+            return true;
+        }
     }
 }

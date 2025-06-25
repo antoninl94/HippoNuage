@@ -8,6 +8,8 @@ public class FileServiceApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(FileServiceApplication.class, args);
+		System.setProperty("ffmpeg.location", "/usr/bin/ffmpeg");
+
 	}
 
 }
