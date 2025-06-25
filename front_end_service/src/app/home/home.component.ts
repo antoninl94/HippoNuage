@@ -23,6 +23,7 @@ export class HomeComponent {
     email: '',
     password: '',
   };
+  successMessage: string | null = null;
 
   constructor(private http: HttpClient, private router: Router) {
     window.addEventListener('resize', () => {
@@ -64,20 +65,24 @@ export class HomeComponent {
     if (!this.profile.password || !this.profile.email) {
       return;
     }
+    const token = localStorage.getItem('token');
+    const headers = { Authorization: `Bearer ${token}` };
     const payload = {
-    email: this.profile.email,
-    password: this.profile.password,
+    newEmail: this.profile.email,
+    newPassword: this.profile.password,
     };
-    this.http.post<{ message: string; token?: string }>('http://localhost:8080/user/update', payload)
+    this.http.put<{ message: string; token?: string }>('http://localhost:8080/user/update', payload, {headers})
       .subscribe({
         next: (response) => {
           console.log('Profil mis à jour :', response.message);
           if (response.token) {
             localStorage.setItem('token', response.token);
+            this.successMessage = "Profil mis à jour avec succès";
           }
         },
         error: (err) => {
           console.error('Erreur lors de la mise à jour du profil :', err);
+          this.errorMessage = "Echec de la mise à jour des informations";
           this.router.navigate(['/home']);
         },
     });
