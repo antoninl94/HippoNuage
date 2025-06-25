@@ -63,13 +63,21 @@ public class FileServiceImplementation implements FileFacade {
         }
 
         try {
-            // Vérifie le type de fichier si c'est un jpg/jpeg alors le fichier est compressé
+            // Vérifie le type de fichier et applique la compression adaptée
             if (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg")) {
                 FileCompressService.compressImage(multipartFile, destinationFile);
+            } else if (extension.equalsIgnoreCase("txt") || extension.equalsIgnoreCase("csv")){
+                if (multipartFile.getSize() > 2000) {
+                    FileCompressService.compressTxtCsv(multipartFile, destinationFile);
+                } else {
+                    multipartFile.transferTo(destinationFile);
+                }
             } else if (extension.equalsIgnoreCase("pdf")) {
                 FileCompressService.compressPDF(multipartFile, destinationFile, 0.3f);
             } else if (extension.equalsIgnoreCase("mp3")) {
-                FileCompressService.compressMp3(multipartFile, destinationFile, 64000);
+                FileCompressService.compressMp3(multipartFile, destinationFile);
+            } else if (extension.equalsIgnoreCase("mp4")) {
+                FileCompressService.compressMp4(multipartFile, destinationFile);
             } else {
                 multipartFile.transferTo(destinationFile);
             }

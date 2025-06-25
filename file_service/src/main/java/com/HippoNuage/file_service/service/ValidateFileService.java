@@ -16,7 +16,7 @@ public class ValidateFileService {
             throw new IllegalArgumentException("Type de fichier non reconnu");
         }
 
-        // Fixe une limite de taille selon le type de fichier
+        // Fixe une limite de taille selon le type de fichier et défini le type de fichier autorisé
         switch (contentType) {
             case "image/png":
             case "image/jpeg":
@@ -27,6 +27,7 @@ public class ValidateFileService {
                 break;
             case "application/pdf":
             case "text/plain":
+            case "text/csv":
                 if (size > 10 * 1024 * 1024) {
                   throw new IllegalArgumentException("Les PDF et txt ne doivent pas dépasser 10 Mo");
                 }

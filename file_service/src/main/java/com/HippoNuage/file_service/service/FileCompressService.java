@@ -3,11 +3,13 @@ package com.HippoNuage.file_service.service;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
+import java.util.zip.GZIPOutputStream;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -28,15 +30,27 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import ws.schild.jave.Encoder;
 import ws.schild.jave.EncoderException;
 import ws.schild.jave.InputFormatException;
-import ws.schild.jave.MultimediaObject;
-import ws.schild.jave.encode.AudioAttributes;
-import ws.schild.jave.encode.EncodingAttributes;
+
+
+
 
 @Service
 public class FileCompressService {
+
+    public static void compressTxtCsv(MultipartFile file, Path destination) throws IOException {
+        try (
+            InputStream in = file.getInputStream();
+            OutputStream out = new GZIPOutputStream(Files.newOutputStream(destination));
+        ) {
+            byte[] buffer = new byte[8192];
+            int length;
+            while ((length = in.read(buffer)) > -1) {
+                out.write(buffer, 0, length);
+            }
+        }
+    }
 
     // Méthode pour compresser les fichier jpg/jpeg
     public static void compressImage(MultipartFile file, Path destination) throws IOException {
@@ -86,21 +100,21 @@ public class FileCompressService {
                     if (xObject instanceof PDImageXObject imageXObject) {
                         BufferedImage image = imageXObject.getImage();
                         if (image == null) {
-                                System.out.println("Image non lisible, ignorée : " + xObjectName.getName());
-                                continue;
+                            System.out.println("Image non lisible, ignorée : " + xObjectName.getName());
+                            continue;
                         }
                         if (imageXObject.getColorSpace().getName().equals("DeviceGray")
-                        && imageXObject.getBitsPerComponent() <= 1) {
+                                && imageXObject.getBitsPerComponent() <= 1) {
                             continue;
                         }
 
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        
+
                         ImageWriter writer = ImageIO.getImageWritersByFormatName("jpg").next();
                         ImageWriteParam param = writer.getDefaultWriteParam();
                         param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
                         param.setCompressionQuality(quality);
-                        
+
                         try (ImageOutputStream ios = ImageIO.createImageOutputStream(baos)) {
                             writer.setOutput(ios);
                             writer.write(null, new IIOImage(image, null, null), param);
@@ -108,15 +122,15 @@ public class FileCompressService {
                             writer.dispose();
                         }
                         PDImageXObject compressedImage = PDImageXObject.createFromByteArray(
-                            document,
-                            baos.toByteArray(),
-                            xObjectName.getName()
-                            );
-                            resources.put(xObjectName, compressedImage);
-                        }
+                                document,
+                                baos.toByteArray(),
+                                xObjectName.getName()
+                        );
+                        resources.put(xObjectName, compressedImage);
+                    }
                 }
             }
-            
+
             for (COSObject cosObject : document.getDocument().getObjects()) {
                 COSBase base = cosObject.getObject();
                 if (base instanceof COSStream stream) {
@@ -128,37 +142,53 @@ public class FileCompressService {
         }
     }
 
+    // Compresse les fichiers mp3 en passant par des lignes de commandes
+    public static void compressMp3(MultipartFile multipartFile, Path destination) throws IOException, InputFormatException, EncoderException {
+        // Crée un fichier temporaire
+        Path tempInput = Files.createTempFile("input", ".mp3");
+        multipartFile.transferTo(tempInput.toFile());
 
-    public static void compressMp3(MultipartFile multipartFile, Path destination, int bitrateKbps) throws IOException, InputFormatException, EncoderException {
-        java.io.File temp = java.io.File.createTempFile("temp-audio", ".mp3");
-        
+        // Envoie la ligne de commande permettant la compression du fichier
+        ProcessBuilder builder = new ProcessBuilder(
+            "ffmpeg", "-i", tempInput.toString(), "-b:a", "96k", destination.toString()
+        );
+        builder.inheritIO();
+        Process process = builder.start();
         try {
-            System.out.println("Début de la compression");
-            multipartFile.transferTo(temp);
-            System.out.println("Fichier temporaire créé : " + temp);
-
-            // Défini les paramètres de sortie audio avant encodage
-            AudioAttributes audio = new AudioAttributes();
-            audio.setCodec("libmp3lame");
-            audio.setBitRate(bitrateKbps);
-            audio.setChannels(2);
-            audio.setSamplingRate(44100);
-
-            // Défini les paramètres d'encodage
-            EncodingAttributes attrs = new EncodingAttributes();
-            attrs.setOutputFormat("mp3");
-            attrs.setAudioAttributes(audio);
-            
-            Encoder encoder = new Encoder();
-            encoder.encode(new MultimediaObject(temp), destination.toFile(), attrs);
-            System.out.println("Fichier encodé");
-        } catch (Exception e) {
-            throw new RuntimeException("Erreur lors de la compression MP3", e);
-        } finally {
-            if (temp.exists()) {
-                temp.delete();
-                System.out.println("Fichier temporaire supprimé");
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                throw new IOException("ffmpeg process failed with exit code " + exitCode);
             }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IOException("ffmpeg process was interrupted", e);
+        } finally {
+            Files.deleteIfExists(tempInput);
+        }
+    }
+
+    // Compresse les fichiers mp4 en passant par des lignes de commandes
+    public static void compressMp4(MultipartFile multipartFile, Path destination) throws IOException, InputFormatException, EncoderException {
+        // Crée un fichier temporaire
+        Path tempInput = Files.createTempFile("input", ".mp4");
+        multipartFile.transferTo(tempInput.toFile());
+
+        // Envoie la ligne de commande permettant la compression du fichier
+        ProcessBuilder builder = new ProcessBuilder(
+            "ffmpeg", "-i", tempInput.toString(), "-vcodec", "libx264", "-crf", "28", "-preset", "fast", "-acodec", "aac", "-b:a", "96k", destination.toString()
+        );
+        builder.inheritIO();
+        Process process = builder.start();
+        try {
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                throw new IOException("ffmpeg process failed with exit code " + exitCode);
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IOException("ffmpeg process was interrupted", e);
+        } finally {
+            Files.deleteIfExists(tempInput);
         }
     }
 }
