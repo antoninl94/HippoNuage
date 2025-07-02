@@ -14,7 +14,7 @@ export interface FileInfo {
   providedIn: 'root'
 })
 export class FileService {
-  private apiUrl = 'http://localhost:8082';
+  private apiUrl = 'http://localhost:8084';
 
   constructor(private http: HttpClient) {}
 
@@ -24,7 +24,7 @@ export class FileService {
       'Content-Type': 'application/json'
     });
 
-    return this.http.get<FileInfo[]>(`${this.apiUrl}/file/getFiles`, { 
+    return this.http.get<FileInfo[]>(`${this.apiUrl}/file_access/getFilesByUser`, { 
       headers: headers,
       withCredentials: true
     });
@@ -38,7 +38,7 @@ export class FileService {
       'Authorization': `Bearer ${localStorage.getItem('token')}`
     });
 
-    return this.http.post(`${this.apiUrl}/file/upload`, formData, {
+    return this.http.post(`http://localhost:8082/file/upload`, formData, {
       headers: headers,
       withCredentials: true
     });
