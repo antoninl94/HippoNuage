@@ -21,5 +21,10 @@
     </p>
   </div>
   <button (click)="upload()" class="block mx-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-md w-48 mt-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Upload</button>
-  <p class="mt-4 text-center text-black font-bold">{{ uploadStatus }}</p>
+  <p class="mt-4 text-center text-black font-bold">
+    <img *ngIf="uploadSuccess" src="assets/chevalierpouceenlair2.png" alt="Succès" class="mx-auto mb-2 h-20 w-20">
+    <img *ngIf="needFile" src="assets/chevalierhausseepaule2.png" alt="Fichier requis" class="mx-auto mb-2 h-20 w-20">
+    <img *ngIf="uploadFail" src="assets/chevalierquipleure2.png" alt="Échec" class="mx-auto mb-2 h-20 w-20">
+    {{ uploadStatus }}
+  </p>
 </div>
