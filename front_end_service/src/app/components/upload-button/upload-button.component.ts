@@ -41,12 +41,14 @@ export class UploadButtonComponent {
           this.uploadStatus = 'Upload réussi';
           this.sharedService.triggerDAshboardRefresh();
           this.uploadSuccess = true;
+          this.selectedFiles = null;
           this.resetMessageAfterDelay();
         },
         error: (err) => {
           console.error('Erreur lors de l\'upload', err);
           this.uploadStatus= 'Erreur lors de l\'upload';
           this.uploadFail = true;
+          this.selectedFiles = null;
           this.resetMessageAfterDelay();
         }
       });
