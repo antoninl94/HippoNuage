@@ -30,16 +30,16 @@
 
     <!-- Si l'utilisateur n'est PAS connecté -->
     <ng-container *ngIf="!isLoggedIn; else loggedInMenu">
-      <li><a href="/connexion" (click)="isMenuOpen = false" class="block py-4 text-black hover:bg-gray-100">Se connecter</a></li>
-      <li><a href="/inscription" (click)="isMenuOpen = false" class="block py-4 text-black hover:bg-gray-100">S'inscrire</a></li>
-      <li><a href="/mentions-legales" (click)="isMenuOpen = false" class="block py-4 text-black hover:bg-gray-100">Mentions Légales</a></li>
+      <li><a routerLink="/connexion" (click)="isMenuOpen = false" class="block py-4 text-black hover:bg-gray-100">Se connecter</a></li>
+      <li><a routerLink="/inscription" (click)="isMenuOpen = false" class="block py-4 text-black hover:bg-gray-100">S'inscrire</a></li>
+      <li><a routerLink="/mentions-legales" (click)="isMenuOpen = false" class="block py-4 text-black hover:bg-gray-100">Mentions Légales</a></li>
     </ng-container>
 
     <!-- Si l'utilisateur EST connecté -->
     <ng-template #loggedInMenu>
-      <li><a href="/home" (click)="isMenuOpen = false" class="block py-4 text-black hover:bg-gray-100">Accueil</a></li>
+      <li><a routerLink="/home" (click)="isMenuOpen = false" class="block py-4 text-black hover:bg-gray-100">Accueil</a></li>
       <li><a (click)="logout()" class="block py-4 text-black hover:bg-gray-100">Se déconnecter</a></li>
-      <li><a href="/mentions-legales" (click)="isMenuOpen = false" class="block py-4 text-black hover:bg-gray-100">Mentions Légales</a></li>
+      <li><a routerLink="/mentions-legales" (click)="isMenuOpen = false" class="block py-4 text-black hover:bg-gray-100">Mentions Légales</a></li>
     </ng-template>
 
   </ul>

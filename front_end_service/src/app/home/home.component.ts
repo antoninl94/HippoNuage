@@ -1,20 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router} from '@angular/router';
 import { EmailVerificationPopupComponent } from '../email-verification-popup/email-verification-popup.component';
+import { FileService } from '../services/file.service';
+import { FileInfo } from '../services/file.service';
+import { UploadButtonComponent } from '../components/upload-button/upload-button.component';
+import { Subscription } from 'rxjs';
+import { SharedService } from '../services/shared.service';
+
+
 @Component({
   selector: 'app-home',
   standalone:true,
-  imports: [CommonModule, FormsModule, HttpClientModule, EmailVerificationPopupComponent],
+  imports: [CommonModule, FormsModule, HttpClientModule, EmailVerificationPopupComponent, UploadButtonComponent],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  styleUrls: ['./home.component.css'],
+  providers: [HttpClient]
 })
 
-export class HomeComponent {
+
+export class HomeComponent implements OnInit, OnDestroy {
   showEmailPopup = false;
   errorMessage: string | null = null;
+  successMessage: string | null = null;
   openSidebar = window.innerWidth >= 768;
   activeSection = 'dashboard';
   windowWidth: number = window.innerWidth;
@@ -23,8 +33,10 @@ export class HomeComponent {
     email: '',
     password: '',
   };
+  files: FileInfo[] = [];
+  private refreshSub!: Subscription;
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private http: HttpClient, private router: Router, private fileService: FileService, private sharedService: SharedService) {
     window.addEventListener('resize', () => {
       this.windowWidth = window.innerWidth;
     });
@@ -47,9 +59,16 @@ export class HomeComponent {
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
-        if (!payload.validatedEmail) {
+        if (!payload.ValidatedEmail) {
           this.showEmailPopup = true;
         }
+        this.fileService.getUserFiles().subscribe({
+          next: (data) => (this.files = data),
+          error: (err) => console.error('Erreur lors de la récupération des fichiers', err)
+        });
+        this.refreshSub = this.sharedService.refreshDashboard$.subscribe(() => {
+          this.loadDashboard();
+        })
       } catch (e) {
         console.error('Erreur de décodage du token', e);
       }
@@ -64,20 +83,24 @@ export class HomeComponent {
     if (!this.profile.password || !this.profile.email) {
       return;
     }
+    const token = localStorage.getItem('token');
+    const headers = { Authorization: `Bearer ${token}` };
     const payload = {
-    email: this.profile.email,
-    password: this.profile.password,
+    newEmail: this.profile.email,
+    newPassword: this.profile.password,
     };
-    this.http.post<{ message: string; token?: string }>('http://localhost:8080/user/update', payload)
+    this.http.put<{ message: string; token?: string }>('http://localhost:8080/user/update', payload, {headers})
       .subscribe({
         next: (response) => {
           console.log('Profil mis à jour :', response.message);
           if (response.token) {
             localStorage.setItem('token', response.token);
+            this.successMessage = "Profil mis à jour avec succès";
           }
         },
         error: (err) => {
           console.error('Erreur lors de la mise à jour du profil :', err);
+          this.errorMessage = "Echec de la mise à jour des informations";
           this.router.navigate(['/home']);
         },
     });
@@ -86,4 +109,16 @@ export class HomeComponent {
   onResendEmail() {
     console.log("Email de confirmation renvoyé");
   }
+
+  ngOnDestroy(): void {
+    this.refreshSub.unsubscribe();
+  }
+
+  loadDashboard(): void {
+    this.fileService.getUserFiles().subscribe({
+      next: (data) => (this.files = data),
+      error: (err) => console.error('Erreur lors de la récupération des fichiers', err)
+    });
+  }
 }
+

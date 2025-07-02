@@ -1,0 +1,17 @@
+::ng-deep .dropzone .dz-drag-hover-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.6);
+  font-size: 24px;
+  font-weight: bold;
+  overflow-y: auto;
+  scroll-padding-top: 1rem;
+  padding-top: 1rem;
+  flex-direction: column;
+  justify-content: flex-start;
+}

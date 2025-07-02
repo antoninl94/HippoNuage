@@ -28,6 +28,7 @@ export class LoginformComponent {
         next: (response) => {
           console.log('Login réussi', response);
           this.authService.login(response.token);
+          console.log('test 1')
           this.router.navigate(['/home']);
         },
         error: (error) => {

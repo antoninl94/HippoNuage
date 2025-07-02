@@ -1,0 +1,25 @@
+<div class="max-w-full my-0 p-6 bg-white/75 rounded-md shadow-lg">
+  <h2 class="text-2xl font-semibold text-center mb-6">Upload un fichier</h2>
+    <div
+      class="dropzone relative border-2 border-dashed border-gray-600 rounded-md px-6 py-0 text-center"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)"
+    >
+    <div *ngIf="isDraggingOver" class="dz-drag-hover-message text-lg font-bold text-blue-600 py-4">Déposez ici</div>
+    <div *ngIf="isDropped" class="dz-drag-hover-message text-lg font-bold text-blue-600 py-4">
+      <ul>
+        <li *ngFor="let file of selectedFiles">{{ file.name }}</li>
+      </ul>
+    </div>
+    <input type="file" id="fileInput" class="hidden" (change)="onFileSelected($event)" multiple>
+    <svg class="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 17l-4 4m0 0l-4-4m4 4V3"></path>
+    </svg>
+    <p class="text-sm py-2">
+      Glissez/Déposez vos fichiers ou <label for="fileInput" class="cursor-pointer text-blue-500 hover:underline">cliquez ici</label> pour upload.
+    </p>
+  </div>
+  <button (click)="upload()" class="block mx-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-md w-48 mt-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Upload</button>
+  <p class="mt-4 text-center text-black font-bold">{{ uploadStatus }}</p>
+</div>

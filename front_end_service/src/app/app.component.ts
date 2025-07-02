@@ -10,9 +10,11 @@ import { MailSendingComponent } from './mail-sending/mail-sending.component';
 import { FormsModule } from '@angular/forms';
 import { FooterComponent } from './shared/footer/footer.component';
 import { EmailVerificationPopupComponent } from './email-verification-popup/email-verification-popup.component';
+import { UploadButtonComponent } from './components/upload-button/upload-button.component';
+
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HeaderComponent, HeroComponent, RegisterformComponent, LoginformComponent, RouterModule, HomeComponent, MailSendingComponent, FormsModule, FooterComponent, EmailVerificationPopupComponent],
+  imports: [RouterOutlet, HeaderComponent, HeroComponent, RegisterformComponent, LoginformComponent, RouterModule, HomeComponent, MailSendingComponent, FormsModule, FooterComponent, EmailVerificationPopupComponent, UploadButtonComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
