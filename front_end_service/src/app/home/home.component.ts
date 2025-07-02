@@ -33,6 +33,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     email: '',
     password: '',
   };
+
   files: FileInfo[] = [];
   private refreshSub!: Subscription;
 

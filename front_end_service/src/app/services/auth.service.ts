@@ -21,6 +21,7 @@ export class AuthService {
   }
 }
 
+
   login(token:string):void {
     localStorage.setItem('token', token);
   }

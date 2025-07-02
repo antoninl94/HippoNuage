@@ -1,5 +1,7 @@
 package com.HippoNuage.User.user_service.service;
 
+import java.net.URI;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,6 +21,8 @@ import com.HippoNuage.User.user_service.model.Tokens;
 import com.HippoNuage.User.user_service.model.User;
 import com.HippoNuage.User.user_service.repository.TokenRepository;
 import com.HippoNuage.User.user_service.repository.UserRepository;
+
+import jakarta.mail.MessagingException;
 
 @Service
 public class ServiceImplementation implements UserFacade {
@@ -90,7 +94,13 @@ public class ServiceImplementation implements UserFacade {
             user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
             this.userRepository.save(user);
             String token = this.jwtConfig.generateToken(user);
+            try {
             this.emailValidationService.SendValidationEmail(user);
+            } catch (MessagingException e){
+                return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("Impossible de renvoyer un email à " + user.getEmail());
+            }
             AuthResponseDto response = new AuthResponseDto("Chevalier adoubé! Pour Hipponuage ! Valide ton email pour accéder aux fonctionnalités !", token);
             return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -143,16 +153,16 @@ public class ServiceImplementation implements UserFacade {
         }
         finaluser.setPassword(this.passwordEncoder.encode(updateDto.getNewPassword()));
         this.userRepository.save(finaluser);
-        return ResponseEntity.ok("Votre profil a été modifié!");
+        return ResponseEntity.ok().body(Map.of("message", "Profil mis à jour avec succès", "token", this.jwtConfig.generateToken(finaluser)));
     }
 
     @Override
     public ResponseEntity<?> disconnect(String token) {
         
-        //Check si le token passé commence par 'Bearer tokenvalue' oudirectement 'tokenvalue'
+        //Check si le token passé commence par 'Bearer tokenvalue' ou directement 'tokenvalue'
         String TokenChecked = token.startsWith("Bearer ") ? token.substring(7) : token;
         
-        //Ici on trouve l'objet token grace au hash
+        //objet token via le hash
         Optional<Tokens> TokenEntity = this.tokenRepository.findByTokenHash(this.tokenImplementation.hashToken(TokenChecked));
        
         //Verification de l'objet retourné
@@ -170,13 +180,15 @@ public class ServiceImplementation implements UserFacade {
     }
 
     @Override
-    public ResponseEntity<?> verifyEmail(@RequestParam("token") String token){
+    public ResponseEntity<Void> verifyEmail(@RequestParam("token") String token) {
         boolean verified = emailValidationService.verifyEmailToken(token);
 
         if (verified) {
-            return ResponseEntity.ok("Bien joué Chevalier!");
+            URI redirectUri = URI.create("https://localhost:3000/confirmation?status=success");
+            return ResponseEntity.status(HttpStatus.FOUND).location(redirectUri).build();
         } else {
-            return ResponseEntity.badRequest().body("Tu n'es qu'un gueux.");
+            URI redirectUri = URI.create("https://localhost:3000/confirmation?status=error");
+            return ResponseEntity.status(HttpStatus.FOUND).location(redirectUri).build();
         }
     }
 
@@ -204,9 +216,15 @@ public class ServiceImplementation implements UserFacade {
         }
         User finaluser = user.get();
         if (!finaluser.getValidatedEmail()){
+            try {
             this.emailValidationService.SendValidationEmail(finaluser);
             return ResponseEntity
                 .ok("Un email t'a été adressé, encore une fois ! Ne te fourvoie plus !");
+            } catch (MessagingException e){
+                return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("Impossible de renvoyer un email à " + finaluser.getEmail());
+            }
         }
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)

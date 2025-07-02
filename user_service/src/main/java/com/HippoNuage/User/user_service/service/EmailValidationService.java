@@ -5,14 +5,17 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import com.HippoNuage.User.user_service.model.EmailValidationToken;
 import com.HippoNuage.User.user_service.model.User;
 import com.HippoNuage.User.user_service.repository.EmailValidationRepository;
 import com.HippoNuage.User.user_service.repository.UserRepository;
+
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 
 @Service
 public class EmailValidationService{
@@ -31,7 +34,7 @@ public class EmailValidationService{
         this.userRepository = userRepository;
     }
 
-    public void SendValidationEmail(User user){
+    public void SendValidationEmail(User user) throws MessagingException {
         String token = UUID.randomUUID().toString();
         EmailValidationToken validationtoken = new EmailValidationToken();
         validationtoken.setUser(user);
@@ -40,14 +43,24 @@ public class EmailValidationService{
         this.emailValidationRepository.save(validationtoken);
 
         String validationLink = appUrl + "user/verify-email?token=" + token;
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(user.getEmail());
-        mailMessage.setFrom("contact-hippoland@hipponuage.com");
-        mailMessage.setSubject("Pensez à vérifier votre e-mail");
-        mailMessage.setText("Merci d'avoir rejoins HippoNuage ! Pour valider" +
-         " ton adresse et porter le haume de nos contrées, cliques sur ce lien : " + validationLink);
-        
-        this.mailSender.send(mailMessage);
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+        helper.setTo(user.getEmail());
+        helper.setFrom("contact-hippoland@hipponuage.com");
+        helper.setSubject("Pensez à vérifier votre e-mail");
+
+        String htmlContent = "<html>" +
+            "<body>" +
+            "<p>Merci d'avoir rejoint HippoNuage !</p>" +
+            "<p>Pour valider ton adresse et porter le haume de nos contrées, clique sur ce lien :</p>" +
+            "<a href='" + validationLink + "'>Valider mon email</a>" +
+            "</body>" +
+            "</html>";
+
+        helper.setText(htmlContent, true); // true indique que c'est du HTML
+        this.mailSender.send(message);
     }
 
     public boolean verifyEmailToken(String token) {
