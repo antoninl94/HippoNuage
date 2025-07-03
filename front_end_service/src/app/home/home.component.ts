@@ -126,6 +126,22 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
+  downloadFile(fileName: string): void {
+    this.fileService.previewFile(fileName).subscribe({
+      next: (response: Blob) => {
+      const url = window.URL.createObjectURL(response);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      a.click();
+      window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error("Erreur lors de la prévisualisation du fichier :", err);
+      }
+    });
+  }
+
   ngOnDestroy(): void {
     this.refreshSub.unsubscribe();
   }
