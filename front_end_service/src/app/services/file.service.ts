@@ -30,6 +30,23 @@ export class FileService {
     });
   }
 
+  previewFile(fileName: string, preview: boolean = true): Observable<any>{
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/file_access/getFile`, {
+      headers: headers,
+      withCredentials: true,
+      responseType: 'blob',
+      params: {
+        filename: fileName,
+        preview: preview.toString()
+      }
+    });
+  }
+
   uploadFile(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
