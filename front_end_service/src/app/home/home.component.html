@@ -51,34 +51,47 @@
         </svg>
       </button>
     </div>
-    
+
     <!-- Sections -->
-    <div *ngIf="activeSection === 'dashboard'" class="">
-      <app-upload-button></app-upload-button>
+    <div *ngIf="activeSection === 'dashboard'"><app-upload-button></app-upload-button>
       <app-email-verification-popup *ngIf="showEmailPopup" (closed)="onPopupClosed()" (resend)="onResendEmail()"
-      class="">
-    </app-email-verification-popup>
-    <div class="mb-8"></div>
-    <div class="bg-white p-4 rounded-lg shadow-md mb-8">
-      <h1 class="text-2xl font-bold text-gray-800">Mes Fichiers</h1>
-      <p class="text-gray-600 mt-1">Liste des fichiers stockés sur mon compte.</p>
-    </div>
-    
-    <!-- Stats Table -->
+        class="">
+      </app-email-verification-popup>
+      <div class="mb-8"></div>
+      <div class="bg-white p-4 rounded-lg shadow-md mb-8">
+        <h1 class="text-2xl font-bold text-gray-800">Mes Fichiers</h1>
+        <p class="text-gray-600 mt-1">Liste des fichiers stockés sur mon compte.</p>
+      </div>
+
+      <!-- Stats Table -->
       <div class="bg-white rounded-lg shadow-md overflow-x-auto overflow-y-auto mt-4" style="max-height: 600px;">
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50 sticky top-0 w-full shadow-md z-10 p-4">
             <tr>
-              <th class="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Nom de fichier</th>
+              <th class="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Nom de fichier
+              </th>
               <th class="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Taille</th>
-              <th class="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Date de création</th>
+              <th class="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Date de création
+              </th>
+                <th class="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider inline-block ml-4">Actions</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200">
             <tr *ngFor="let file of files">
               <td class="px-4 py-3 text-sm text-gray-900">{{ file.name }}</td>
-              <td class="px-4 py-3 text-sm text-gray-700">  {{ (file.size / (1024 * 1024)) | number:'1.2-2' }} Mo</td>
-              <td class="px-4 py-3 text-sm text-gray-700">{{ file.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td class="px-4 py-3 text-sm text-gray-700"> {{ (file.size / (1024 * 1024)) | number:'1.2-2' }} Mo</td>
+              <td class="px-4 py-3 text-sm text-gray-700">{{ file.uploadedAt | date:'dd/MM/yyyy HH:mm' }}</td>
+                <td>
+                  <button title="Télécharger" (click)="downloadFile(file.name)">
+                    <img src="assets/symbole_download2.png" alt="Prévisualiser" class="inline-block h-6 w-6">
+                  </button>
+                  <button title="Prévisualiser" (click)="previewFile(file.name)">
+                    <img src="assets/oeildedragon2.png" alt="Prévisualiser" class="inline-block ml-6 h-6 w-6">
+                  </button>
+                  <button title="Supprimer">
+                    <img src="assets/corbeillemedievale2.png" alt="Supprimer" class="inline-block ml-6 h-6 w-6">
+                  </button>
+                </td>
             </tr>
           </tbody>
         </table>

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 export interface FileInfo {
   name: string;
   size: number;
-  created_at: string;
+  uploadedAt: string;
 }
 
 
@@ -27,6 +27,40 @@ export class FileService {
     return this.http.get<FileInfo[]>(`${this.apiUrl}/file_access/getFilesByUser`, { 
       headers: headers,
       withCredentials: true
+    });
+  }
+
+  previewFile(fileName: string, preview: boolean = true): Observable<any>{
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/file_access/getFile`, {
+      headers: headers,
+      withCredentials: true,
+      responseType: 'blob',
+      params: {
+        filename: fileName,
+        preview: preview.toString()
+      }
+    });
+  }
+
+  downloadFile(fileName: string, preview: boolean = false): Observable<any>{
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/file_access/getFile`, {
+      headers: headers,
+      withCredentials: true,
+      responseType: 'blob',
+      params: {
+        filename: fileName,
+        preview: preview.toString()
+      }
     });
   }
 

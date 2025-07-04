@@ -111,6 +111,37 @@ export class HomeComponent implements OnInit, OnDestroy {
     console.log("Email de confirmation renvoyé");
   }
 
+  previewFile(fileName: string): void {
+    this.fileService.previewFile(fileName).subscribe({
+      next: (response: Blob) => {
+        console.log('Type MIME reçu : ', response.type);
+        const mimeType = response.type || 'application/octet-stream';
+        const blob = new Blob([response], { type: mimeType });
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+      },
+      error: (err) => {
+        console.error("Erreur lors de la prévisualisation du fichier :", err);
+      }
+    });
+  }
+
+  downloadFile(fileName: string): void {
+    this.fileService.previewFile(fileName).subscribe({
+      next: (response: Blob) => {
+      const url = window.URL.createObjectURL(response);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      a.click();
+      window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error("Erreur lors de la prévisualisation du fichier :", err);
+      }
+    });
+  }
+
   ngOnDestroy(): void {
     this.refreshSub.unsubscribe();
   }

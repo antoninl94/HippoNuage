@@ -18,6 +18,7 @@ export class UploadButtonComponent {
   uploadSuccess: boolean = false;
   needFile: boolean = false;
   uploadFail: boolean = false;
+  isLoading:boolean = false;
 
   constructor(private fileService: FileService, private sharedService: SharedService) {}
 
@@ -29,14 +30,17 @@ export class UploadButtonComponent {
 
   upload() {
     if (!this.selectedFiles) {
+      this.uploadSuccess = false;
       this.uploadStatus = "Veuillez sélectionner un fichier avant d'upload";
       this.needFile = true;
       this.resetMessageAfterDelay();
       return;
     }
+    this.isLoading = true;
     this.selectedFiles.forEach(file => {
       this.fileService.uploadFile(file).subscribe({
         next: () => {
+          this.isLoading = false;
           this.needFile = false;
           this.uploadStatus = 'Upload réussi';
           this.sharedService.triggerDAshboardRefresh();
@@ -46,6 +50,7 @@ export class UploadButtonComponent {
         },
         error: (err) => {
           console.error('Erreur lors de l\'upload', err);
+          this.isLoading = false;
           this.uploadStatus= 'Erreur lors de l\'upload';
           this.uploadFail = true;
           this.selectedFiles = null;
