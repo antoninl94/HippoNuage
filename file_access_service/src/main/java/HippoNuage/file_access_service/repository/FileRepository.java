@@ -1,5 +1,6 @@
 package HippoNuage.file_access_service.repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,4 +10,5 @@ import HippoNuage.file_access_service.model.File;
 
 @Repository
 public interface FileRepository extends JpaRepository<File, UUID> {
+    Optional<File>findByName(String fileName);
 }

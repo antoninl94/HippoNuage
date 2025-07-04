@@ -3,6 +3,7 @@ package HippoNuage.file_access_service.service;
 import java.io.BufferedInputStream;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,10 +15,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import HippoNuage.file_access_service.config.JWTConfig;
+import HippoNuage.file_access_service.model.File;
 import HippoNuage.file_access_service.repository.FileRepository;
 import HippoNuage.file_access_service.tools.AccessTools;
+import jakarta.persistence.EntityNotFoundException;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.CopyObjectRequest;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
@@ -120,21 +125,27 @@ public class FileAccessServiceImplementation implements FileAccessFacade{
             }
 
             // Construire les headers HTTP
-            HttpHeaders headers = new HttpHeaders();
-            // Sécurise le contentType
-            if (contentType == null || !contentType.contains("/")) {
-                if (outFileName.endsWith(".csv")) {
-                    contentType = "text/csv";
-                } else if (outFileName.endsWith(".json")) {
-                    contentType = "application/json";
-                } else if (outFileName.endsWith(".txt")) {
-                    contentType = "text/plain";
-                } else if (outFileName.endsWith(".pdf")) {
-                    contentType = "application/pdf";
-                } else {
-                    contentType = "application/octet-stream";
+                HttpHeaders headers = new HttpHeaders();
+                // Sécurise le contentType
+                if (contentType == null || !contentType.contains("/")) {
+                    if (outFileName.endsWith(".csv")) {
+                        contentType = "text/csv";
+                    } else if (outFileName.endsWith(".json")) {
+                        contentType = "application/json";
+                    } else if (outFileName.endsWith(".txt")) {
+                        contentType = "text/plain";
+                    } else if (outFileName.endsWith(".pdf")) {
+                        contentType = "application/pdf";
+                    } else if (outFileName.endsWith(".jpg") || outFileName.endsWith(".jpeg")) {
+                        contentType = "image/jpeg";
+                    } else if (outFileName.endsWith(".png")) {
+                        contentType = "image/png";
+                    } else if (outFileName.endsWith(".html")) {
+                        contentType = "text/html";
+                    } else {
+                        contentType = "application/octet-stream";
+                    }
                 }
-            }
             headers.setContentType(MediaType.parseMediaType(contentType));
             if (preview) {
                 // Affichage inline dans le navigateur
@@ -153,4 +164,86 @@ public class FileAccessServiceImplementation implements FileAccessFacade{
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la récupération du fichier");
     }
     }
+    @Override
+    public ResponseEntity<?>deleteObject(String jwt, String fileName) {
+        String userId = this.jwtConfig.extractUserId(jwt);
+        boolean isExpired;
+        try {
+        isExpired = jwtConfig.isTokenExpired(jwt);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if (userId == null || isExpired) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        String s3Key = userId + "/" + fileName;
+        DeleteObjectRequest request = DeleteObjectRequest.builder()
+                .bucket(bucketName)
+                .key(s3Key)
+                .build();
+        this.S3Client.deleteObject(request);
+        Optional<File> toSuppress = this.fileRepository.findByName(fileName);
+        if (toSuppress.isPresent()) {
+            File file = toSuppress.get();
+            fileRepository.delete(file);
+        } else {
+            throw new EntityNotFoundException("Fichier non trouvé : " + fileName);
+        }
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Le fichier a bien été supprimé.");
+    }
+
+    @Override
+    public ResponseEntity<?>renameObject(String jwt, String fileName, String newName) {
+        //Checking user_id
+        String userId = this.jwtConfig.extractUserId(jwt);
+        boolean isExpired;
+        try {
+        isExpired = jwtConfig.isTokenExpired(jwt);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if (userId == null || isExpired) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        //Building access key to storage
+        String oldKey = userId + "/" + fileName;
+        String newKey = userId + "/" + newName;
+
+        //Copying object with newName in key
+        CopyObjectRequest copyReq = CopyObjectRequest.builder()
+                .sourceBucket(bucketName)
+                .sourceKey(oldKey)
+                .destinationBucket(bucketName)
+                .destinationKey(newKey)
+                .build();
+
+        try {
+            this.S3Client.copyObject(copyReq);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur lors de la copie du fichier : " + e.getMessage());
+        }
+
+        Optional<File>fileToProcess = this.fileRepository.findByName(fileName);
+        if (fileToProcess.isPresent()) {
+            File file = fileToProcess.get();
+            file.setName(newName);
+            fileRepository.save(file);
+        } else {
+            throw new EntityNotFoundException("Fichier non trouvé : " + fileName);
+        }
+
+        //Suppressing old file
+        DeleteObjectRequest deleteReq = DeleteObjectRequest.builder()
+                .bucket(bucketName)
+                .key(oldKey)
+                .build();
+
+        this.S3Client.deleteObject(deleteReq);
+        
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Le fichier a bien été renommé");
+    }
+    
 }
