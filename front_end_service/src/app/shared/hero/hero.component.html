@@ -1,14 +1,16 @@
-<div class="hero-bg flex flex-col justify-center items-center overflow-hidden px-4 py-12">
-  <!-- Logo & titre -->
+<div class="bg-[url('assets/HippoNuage-bg.avif')] h-screen w-full bg-cover bg-no-repeat ">
+  <!-- Logo & title -->
+  <div class="flex flex-col justify-center items-center overflow-hidden px-4 py-12 zoom-in">
   <div class="flex flex-col items-center text-center mb-12">
     <img src="/assets/logoV2.png" alt="HerosectionImg" class="backdrop-blur-sm mb-4 h-40">
-    <h1 class="text-4xl  font-bold mb-2 text-shadow-md">
-      Bienvenue chez HippoNuage !
+    <h1 class=" text-4xl  font-bold mb-12 text-shadow-md">
+    <span class="text-white">Hippo</span><span class="">Nuage</span>
     </h1>
-    <p class="font-bold"> Le cloud des vrais chevaliers ⚔️</p>
+    <p class="font-bold text-white">La sécurité d’une forteresse,</p>
+    <p class="font-bold">La souplesse d’un nuage.</p>
   </div>
 
-  <!-- Boutons -->
+  <!-- Buttons -->
   <div class="flex flex-col items-center gap-4 md:flex-row md:justify-center mb-16">
     <a
       class="min-w-[200px] px-6 py-4 text-center rounded-md shadow-xl bg-white transition-all"
@@ -23,34 +25,65 @@
       S'inscrire
     </a>
   </div>
+  </div>
+  </div>
 
   <!-- Section "C'est quoi ?" -->
-  <div class="max-w-5xl w-full flex flex-col items-center px-4 pb-12 bg-black/50 rounded-lg pt-12 shadow-md mb-12 px-8 justify-evenly">
+  <div class="w-full flex flex-col items-center px-4  bg-black  pt-12 shadow-md mb-12 px-8 justify-evenly">
     <h2 class="text-3xl font-bold text-center mb-6 text-white">
-      Utiliser l'HippoNuage
+    AVANTAGES
     </h2>
-    <div class="flex gap-8 w-full flex-col md:flex-row ">
-      <div class=" flex-1 bg-white/80 p-6 rounded-lg shadow-md text-center">
-        <h3 class="font-bold mb-4">Dépose ton fardeau (upload de fichiers)</h3>
-        <p class="">
-          Tels de valeureux écuyers, déposez vos fichiers dans la forteresse du Nuage. En un simple transfert, vos parchemins numériques sont téléportés, stockés et protégés dans les plus hautes tours du château. Aucun dragon (ni hacker) n’y accédera.
+    <div class="flex  bg-white rounded-lg shadow-xl text-center h-56 mb-20 w-4/5">
+<!-- Colonne texte -->
+      <div class="flex-1 flex flex-col justify-center p-4">
+        <h3 class="font-bold text-4xl mb-8 bluetext text-shadow-md">Upload instantané, sécurité maximale</h3>
+        <p>
+          <span class="bluetext font-bold">Déposez, transférez, stockez</span> : vos fichiers prennent leur envol vers le cloud, protégés comme dans un coffre-fort numérique. 
+          Rapidité, fiabilité et tranquillité d’esprit — en un clic.
         </p>
       </div>
-      <div class="flex-1 bg-white/80 p-6 rounded-lg shadow-md text-center">
-        <h3 class="font-bold mb-4">Accès réservé aux chevaliers vérifiés</h3>
-        <p class="">
-          Seuls les nobles porteurs d’un compte certifié — après serment par courriel — peuvent franchir les portes du royaume. Votre coffre numérique est scellé, et seul votre mot de passe magique en détient la clé.</p>
+<!-- Colonne image -->
+      <div class="flex-1 flex items-center justify-center overflow-hidden">
+        <img class="object-cover w-full h-full scale-50" src="../../../assets/need.png" alt="Fichier sécurisé">
       </div>
-      <div class="flex-1 bg-white/80 p-6 rounded-lg shadow-md text-center">
+    </div>
+  <!-- Colonne Verification Mail -->
+      <div class=" flex blueBg rounded-lg shadow-xl text-center h-56 mb-20 w-full">
+        <div class="w-1/2">
+          <img class="object-contain w-full h-full" src="../../../assets/Verifmail.png" alt="Compte vérifié">
+        </div>
+        <div class="flex flex-col justify-center w-1/2 p-4">
+          <h3 class="font-bold mb-8 text-4xl text-shadow-md">Accès réservé aux utilisateurs vérifiés</h3>
+          <p>
+            Seuls les comptes validés par email peuvent accéder à cette zone sécurisée.  
+            Vos fichiers restent protégés et, promis, on ne vous enverra pas de spams ni de messages inutiles.
+          </p>
+        </div>
+      </div>
+       <!-- Colonne Verification Mail -->
+      <div class=" flex bg-white rounded-lg shadow-xl text-center h-56 mb-20 w-4/5">
+       
+        <div class="flex flex-col justify-center w-1/2 p-4">
+          <h3 class="font-bold text-4xl mb-8">Gestion royale de vos artefacts</h3>
+          <p class="">
+          Grâce à notre grimoire moderne, naviguez parmi vos trésors : renommez, classez, invoquez ou bannissez vos fichiers à volonté. Le HippoNuage vous offre une main de fer dans un gant de velours... version fullstack.
+          </p>
+      </div>
+      <div class="w-1/2">
+
+      </div>
+      </div>
+      <!--
+      <div class="flex-1 bg-white p-6 rounded-lg shadow-md text-center">
         <h3 class="font-bold mb-4">Gestion royale de vos artefacts</h3>
         <p class="">
          Grâce à notre grimoire moderne, naviguez parmi vos trésors : renommez, classez, invoquez ou bannissez vos fichiers à volonté. Le HippoNuage vous offre une main de fer dans un gant de velours... version fullstack.
         </p>
       </div>
-    </div>
+    </div>-->
   </div>
   <!-- Section Conception-->
-   <div class="max-w-5xl w-full flex flex-col items-center px-4 bg-black/50 rounded-lg mt-12 pt-12 pb-12 px-8">
+   <div class=" w-full flex flex-col items-center px-4 bg-black/50 rounded-lg mt-12 pt-12 pb-12 px-8">
     <h2 class="text-3xl font-bold text-center mb-12 text-white">
       Conception du Royaume
     </h2>
@@ -82,4 +115,4 @@ Une aventure à taille humaine, mais à l’architecture d’empire.
       </div>
     </div>
   </div>
-</div>
+
