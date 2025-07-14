@@ -24,3 +24,8 @@
 .bluetext {
     color: #4cb2bc;
 }
+
+.super-ellipse {
+  border-radius: 100% 0% 100% 0% / 70% 50% 50% 30%;
+  background-color: white
+}
