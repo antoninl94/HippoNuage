@@ -4,6 +4,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-loginform',
@@ -17,7 +18,7 @@ export class LoginformComponent {
   password: string = '';
   errorMessage: string | null = null;
 
-  private apiUrl = 'http://localhost:8080/user/login';
+  private apiUrl = `${environment.userServiceUrl}/user/login`;
 
   constructor(private http: HttpClient, private router: Router, private authService: AuthService) {}
 

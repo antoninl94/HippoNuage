@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -35,7 +34,6 @@ public class FileAccessController {
         this.jwtConfig = jwtConfig;
     }
     //Retrieve a list of files belonging to a user (based on jwt.user_id)
-    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/getFilesByUser")
     public ResponseEntity<?>accessFiles(@RequestHeader("Authorization") String JwtToken) throws Exception{
         System.out.println("Bonjour je commence la fonction");
@@ -74,7 +72,6 @@ public class FileAccessController {
     }
 
     //Retrieve a file fpr preview or download, depending on preview parameter
-    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/getFile")
     public ResponseEntity<?>getUserFile(@RequestHeader("Authorization") String token, @RequestParam("filename") String filename, @RequestParam(value = "preview", defaultValue="false") boolean preview){
         System.out.println("Bonjour je commence la fonction");
