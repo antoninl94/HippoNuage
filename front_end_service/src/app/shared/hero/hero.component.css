@@ -26,6 +26,5 @@
 }
 
 .super-ellipse {
-  border-radius: 100% 0% 100% 0% / 70% 50% 50% 30%;
-  background-color: white
+  border-radius:50% 50% 50% 50% / 50% 50% 50% 50%;
 }
