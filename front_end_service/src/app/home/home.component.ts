@@ -9,6 +9,7 @@ import { FileInfo } from '../services/file.service';
 import { UploadButtonComponent } from '../components/upload-button/upload-button.component';
 import { Subscription } from 'rxjs';
 import { SharedService } from '../services/shared.service';
+import { environment } from '../environments/environment';
 
 
 @Component({
@@ -90,7 +91,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     newEmail: this.profile.email,
     newPassword: this.profile.password,
     };
-    this.http.put<{ message: string; token?: string }>('http://localhost:8080/user/update', payload, {headers})
+    this.http.put<{ message: string; token?: string }>(`${environment.userServiceUrl}/user/update`, payload, {headers})
       .subscribe({
         next: (response) => {
           console.log('Profil mis à jour :', response.message);
@@ -143,11 +144,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   confirmAndSuppress(fileName: string): void {
-  const confirmed = window.confirm(`Êtes-vous sûr de vouloir supprimer le fichier "${fileName}" ?`);
-  if (confirmed) {
-    this.suppressFile(fileName);
+    const confirmed = window.confirm(`Êtes-vous sûr de vouloir supprimer le fichier "${fileName}" ?`);
+    if (confirmed) {
+      this.suppressFile(fileName);
+    }
   }
-}
 
   suppressFile(fileName: string):void {
     this.fileService.supressFile(fileName).subscribe({

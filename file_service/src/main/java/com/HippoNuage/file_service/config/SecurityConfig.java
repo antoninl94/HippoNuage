@@ -1,5 +1,6 @@
 package com.HippoNuage.file_service.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,6 +14,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 public class SecurityConfig {
+
+    @Value("${cors.allowed.origin}")
+    private String allowedOrigins;
 
     private final String jwtSecret;
 
@@ -45,7 +49,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.addAllowedOrigin("http://localhost:4200"); // Mets ici l'URL de ton front Angular
+        configuration.addAllowedOrigin(allowedOrigins); // Mets ici l'URL de ton front Angular
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         // Optionnel : expose des headers si besoin

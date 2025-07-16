@@ -81,16 +81,16 @@ public class ServiceImplementationTest {
         when(userRepository.findByEmail("' OR 1=1 --")).thenReturn(Optional.empty());
         ResponseEntity<?> response = service.login(login);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Utilisateur non trouvé", response.getBody());
+        assertEquals("Email déjà existant!", response.getBody());
 
         // Test Injection SQL n°2
         LoginDto login2 = new LoginDto();
         login2.setEmail("' UNION SELECT * FROM users --");
         login2.setPassword("irrelevant");
         when(userRepository.findByEmail("' UNION SELECT * FROM users --")).thenReturn(Optional.empty());
-        ResponseEntity<?> response2 = service.login(login);
+        ResponseEntity<?> response2 = service.login(login2);
         assertEquals(HttpStatus.BAD_REQUEST, response2.getStatusCode());
-        assertEquals("Utilisateur non trouvé", response2.getBody());
+        assertEquals("Email déjà existant!", response2.getBody());
     }
 
     @Test

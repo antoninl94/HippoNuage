@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../environments/environment';
 
 
 export interface FileInfo {
@@ -14,7 +15,7 @@ export interface FileInfo {
   providedIn: 'root'
 })
 export class FileService {
-  private apiUrl = 'http://localhost:8084';
+  private apiUrl = `${environment.fileAccessServiceUrl}`;
 
   constructor(private http: HttpClient) {}
 
@@ -72,11 +73,12 @@ export class FileService {
       'Authorization': `Bearer ${localStorage.getItem('token')}`
     });
 
-    return this.http.post(`http://localhost:8082/file/upload`, formData, {
+    return this.http.post(`${environment.fileServiceUrl}/file/upload`, formData, {
       headers: headers,
       withCredentials: true
     });
   }
+
   supressFile(fileName: string): Observable<any>{
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -88,6 +90,6 @@ export class FileService {
       responseType: 'blob',
       params:{
         filename:fileName}
-  });
-  }
+      });
+    }
 }

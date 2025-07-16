@@ -3,6 +3,7 @@ import { HttpHeaders } from '@angular/common/http';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { environment } from '../environments/environment';
 
 
 @Component({
@@ -32,7 +33,7 @@ export class EmailVerificationPopupComponent {
   'Authorization': `Bearer ${token}`
   });
 
-    this.http.post('http://localhost:8080/user/resend-email', {}, { headers, responseType: 'text' })
+    this.http.post(`${environment.userServiceUrl}/user/resend-email`, {}, { headers, responseType: 'text' })
       .subscribe({
         next: () => {
           this.emailSent = true;

@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { environment } from '../environments/environment';
 @Component({
   selector: 'app-registerform',
   standalone:true,
@@ -14,7 +15,7 @@ export class RegisterformComponent {
   email: string = '';
   password: string = '';
 
-  private apiUrl = 'http://localhost:8080/user/register';
+  private apiUrl = `${environment.userServiceUrl}/user/register`;
 
   constructor(private http: HttpClient, private router: Router, private authService: AuthService) {}
 
