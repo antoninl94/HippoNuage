@@ -78,7 +78,7 @@ export class FileService {
       withCredentials: true
     });
   }
-  
+
   supressFile(fileName: string): Observable<any>{
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem('token')}`,
