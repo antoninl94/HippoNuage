@@ -1,7 +1,7 @@
 <!--Popup vérification email-->
 
 <!-- home.component.html -->
-<div class="flex flex-col md:flex-row min-h-screen">
+<div class="flex flex-col md:flex-row min-h-screen blueBg">
   <!-- Sidebar -->
   <aside
     class="bg-white shadow-lg transition-all duration-300 ease-in-out fixed md:static inset-y-0 left-0 z-50 w-20 md:w-64"
@@ -88,7 +88,7 @@
                   <button title="Prévisualiser" (click)="previewFile(file.name)">
                     <img src="assets/oeildedragon2.png" alt="Prévisualiser" class="inline-block ml-6 h-6 w-6">
                   </button>
-                  <button title="Supprimer">
+                  <button title="Supprimer" (click)="confirmAndSuppress(file.name)">
                     <img src="assets/corbeillemedievale2.png" alt="Supprimer" class="inline-block ml-6 h-6 w-6">
                   </button>
                 </td>

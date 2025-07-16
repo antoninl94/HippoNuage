@@ -142,6 +142,24 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
+  confirmAndSuppress(fileName: string): void {
+  const confirmed = window.confirm(`Êtes-vous sûr de vouloir supprimer le fichier "${fileName}" ?`);
+  if (confirmed) {
+    this.suppressFile(fileName);
+  }
+}
+
+  suppressFile(fileName: string):void {
+    this.fileService.supressFile(fileName).subscribe({
+      next: (response: Blob) => {
+        this.loadDashboard();
+      },
+      error: () => {
+        console.error('Erreur lors de la supression du fichier');
+      },
+    })
+  }
+
   ngOnDestroy(): void {
     this.refreshSub.unsubscribe();
   }

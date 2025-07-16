@@ -77,4 +77,17 @@ export class FileService {
       withCredentials: true
     });
   }
+  supressFile(fileName: string): Observable<any>{
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.delete(`${this.apiUrl}/file_access/delete`, {
+      headers: headers, 
+      withCredentials: true,
+      responseType: 'blob',
+      params:{
+        filename:fileName}
+  });
+  }
 }

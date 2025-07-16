@@ -1,0 +1,30 @@
+@keyframes zoomInFadeIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.zoom-in {
+  animation: zoomInFadeIn 0.8s ease forwards;
+}
+
+.zoom-in-delay {
+  animation-delay: 1s;
+}
+
+.blueBg {
+    background-color:  #4cb2bc;
+}
+
+.bluetext {
+    color: #4cb2bc;
+}
+
+.super-ellipse {
+  border-radius:50% 50% 50% 50% / 50% 50% 50% 50%;
+}
