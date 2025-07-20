@@ -8,8 +8,10 @@ import java.util.UUID;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.HippoNuage.file_service.dto.UploadDto;
 import com.HippoNuage.file_service.model.File;
@@ -47,7 +49,11 @@ public class FileServiceImplementation implements FileFacade {
         System.out.println("Début upload : " + multipartFile.getOriginalFilename());
 
         // Vérifie la validité du fichier et fixe une limite de taille en fonction
-        validateFileService.validateFile(multipartFile);
+        try {
+            validateFileService.validateFile(multipartFile);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Fichier invalide : " + e.getMessage());
+        }
         System.out.println("validation ok : " + multipartFile.getOriginalFilename());
 
         String originalFileName = uploadDto.getName();
